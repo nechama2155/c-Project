@@ -32,25 +32,54 @@ reducers: {
     state.getChats = action.payload.get;
     state.sendChats = action.payload.send;
   },
-  setIsRead(state,action){
-    state.chats = state.chats.map(c=>{
-      if(c.chatId === action.payload){
-        c.read = true;
-      }
-    });
-    state.getChats = state.getChats.map(c=>{
-      if(c.chatId === action.payload){
-        c.read = true;
-      }
-    });
-    state.sendChats = state.sendChats.map(c=>{
-      if(c.chatId === action.payload){
-        c.read = true;
-      }
-    });
+//   setIsRead(state,action){
+//     state.chats = state.chats.map(c=>{
+//       if(c.chatId === action.payload){
+//         c.read = true;
+//       }
+//     });
+//     state.getChats = state.getChats.map(c=>{
+//       if(c.chatId === action.payload){
+//         c.read = true;
+//       }
+//      });
+//     state.sendChats = state.sendChats.map(c=>{
+//       if(c.chatId === action.payload){
+//         c.read = true;
+//       }
+//     });
+//   }
+setIsRead: (state, action) => {
+  const chatId = action.payload;
+  
+  // עדכון state.chats
+  if (state.chats && Array.isArray(state.chats)) {
+    const chat = state.chats.find(c => c && c.chatId === chatId);
+    if (chat) {
+      chat.read = true;
+    }
+    // עדכון מספר ההודעות שלא נקראו
+    state.unreadCount = state.chats.filter(c => c && c.read === false).length;
   }
   
-},
+  state.getChats = state.getChats.map(c => {
+    if (c && c.chatId === action.payload) {
+      return { ...c, read: true }; // החזרת עותק מעודכן של האובייקט
+    }
+    return c; // החזרת האובייקט המקורי
+  });
+  // עדכון state.sendChats
+  if (state.sendChats && Array.isArray(state.sendChats)) {
+    state.sendChats = state.sendChats.map(c => {
+      if (c && c.chatId === action.payload) {
+        return { ...c, read: true };
+      }
+      return c;
+    });
+  }
+}
+
+ },
 extraReducers: (builder) => {
 //get
 builder.addCase(ChatsThunk.pending, (state,action) => {
@@ -73,10 +102,12 @@ builder.addCase(fullAssessorThunk.pending, (state,action) => {
 });
 
 builder.addCase(fullAssessorThunk.fulfilled, (state, action) => {
-
+debugger
   state.chats = action.payload.chats;
   state.getChats = state.chats.filter(c=> c.from === "c");
-  state.sendChats = state.chats.filter(c=> c.from === "a");
+  debugger
+  state.sendChats = state.chats.filter(c=> c.from === "a"); 
+   debugger
   state.sucsses = true;
   state.loading = false;
 });

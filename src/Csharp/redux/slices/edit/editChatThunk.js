@@ -6,7 +6,7 @@ export const editChatThunk = createAsyncThunk(
     'editChatThunk',
 
     async (details) => {
-        const response = await fetch(`https://localhost:5278/Chat/Update`,{
+        const response = await fetch(`https://localhost:7132/Chat/Update`,{
             method: 'PUT',
             body: JSON.stringify(details),
             headers: {

@@ -23,10 +23,16 @@ export const About = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-
   const scrollToTop = () => {
-    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+    topRef.current?.scrollIntoView({
+      top: 100,
+      behavior: 'smooth'
+    });
   };
+  // const scrollToTop = () => {
+
+  //   topRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // };
 useEffect(() => {
   // גלילה לראש הדף כשהקומפוננטה נטענת
   window.scrollTo(0, 0);

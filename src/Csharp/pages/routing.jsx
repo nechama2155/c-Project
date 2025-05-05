@@ -17,6 +17,10 @@ import { LastTreatment } from "./lastTreatments"
 import { MyDetails } from "./myDetails"
 import { LastChats } from "./lastChats"
 import { NewChat } from "./newChat"
+
+
+
+
 import { EditAssessment } from "./Assessment/editAssessment"
 import { FullApplications } from "./fullApplications"
 import { Folder } from "@mui/icons-material"

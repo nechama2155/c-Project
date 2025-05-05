@@ -1,0 +1,104 @@
+.file-drop-zone {
+  border: 2px dashed #c3cfe2;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.file-drop-zone:hover,
+.file-drop-zone.active {
+  border-color: #4facfe;
+  background-color: rgba(195, 207, 226, 0.1);
+}
+
+.file-icon {
+  transition: transform 0.2s ease;
+}
+
+.file-item:hover .file-icon {
+  transform: scale(1.1);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(195, 207, 226, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(195, 207, 226, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(195, 207, 226, 0);
+  }
+}
+
+.upload-button {
+  animation: pulse 2s infinite;
+}
+
+/* Double-click effect */
+.file-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(79, 172, 254, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.file-item:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: 500px;
+    height: 500px;
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .file-drop-zone {
+    padding: 15px;
+  }
+  
+  .upload-button {
+    animation: none;
+  }
+}
+
+/* Print dialog styling */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .print-content,
+  .print-content * {
+    visibility: visible;
+  }
+  
+  .print-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}

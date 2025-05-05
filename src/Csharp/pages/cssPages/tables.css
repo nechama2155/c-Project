@@ -1,0 +1,33 @@
+table{
+    margin: 30px;
+    width: 95%;
+    height: auto;
+}
+thead{
+    width: 80%;
+    height: 5vh;
+    background-color: rgb(197, 197, 197);
+    color: white;
+    font-size: large;
+}
+tbody{
+    width: 80%;
+     height:auto; 
+    /* background-color:red; */
+}
+tr{
+    box-shadow:0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+tr:hover{
+    box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.8), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+td{
+    padding: 30px;
+    height: 50px;
+}
+.s{
+    background-color: rgba(96, 139, 250, 0.259);
+}
+.r{
+    background-color: white;
+}

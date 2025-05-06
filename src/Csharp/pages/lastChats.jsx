@@ -1,354 +1,8 @@
-// // import { Button } from "@mui/material";
-// // // import { useEffect } from "react";
-// // import { useDispatch, useSelector } from "react-redux"
-// // import { editChatThunk } from "../redux/slices/edit/editChatThunk";
-// // import { setIsRead } from "../redux/slices/chatSlice";
-// // import { useEffect, useState } from "react";
-
-// // export const LastChats = () =>{
-
-// // const myChats = useSelector(state => state.chat.chats);
-
-// // const dispatch = useDispatch();
-// // const read = (chat) => {
-// //     // chat.Read =  true;
-// //     dispatch(setIsRead (chat.chatId));
-// //     dispatch(editChatThunk(chat));
-// // }
-// // //refresh
-// //     return <div>
-
-
-// // <div>
-// //     {myChats.map((chat,index) => {
-// //         return <div key={index} style={{border:"5px solid gray",margin:"10px",padding:"10px",width:"80%"}}>
-// //             <div>{chat.information}</div>
-// //             <div>{chat.sendDate}</div>
-// //             <Button variant="outlined" onClick={()=>{read(chat)}}>message</Button>
-// //         </div>
-// //     })}
-// // </div>
-
-// //     </div>
-// // }
-
-
-
-
-// ////////////////////////////////////////////////////////////////////////////
-// import React, { useState, useRef, useEffect } from 'react';
-// import {
-//     Box,
-//     Typography,
-//     Button,
-//     Paper,
-//     Divider,
-//     Container,
-//     Avatar,
-//     Fade,
-//     Collapse,
-//     Chip,
-//     useMediaQuery,
-//     useTheme
-// } from '@mui/material';
-// import { useDispatch, useSelector } from "react-redux";
-// import { editChatThunk } from "../redux/slices/edit/editChatThunk";
-// import { setIsRead } from "../redux/slices/chatSlice";
-// import MailOutlineIcon from '@mui/icons-material/MailOutline';
-// import MailIcon from '@mui/icons-material/Mail';
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-// import DateRangeIcon from '@mui/icons-material/DateRange';
-
-// export const LastChats = () => {
-//     const myChats = useSelector(state => state.chat.chats);
-//     //   const getChats = useSelector(state => state.chat.chats);
-//     //   const sendChats = useSelector(state => state.chat.chats);
-//     const dispatch = useDispatch();
-//     const [expandedChats, setExpandedChats] = useState({});
-//     const topRef = useRef(null);
-//     const theme = useTheme();
-//     const type = useSelector(state => state.user.t);    
-//     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-
-//     useEffect(() => {
-//         // Scroll to top when component mounts
-//         window.scrollTo(0, 0);
-//     }, []);
-
-//     const scrollToTop = () => {
-//         topRef.current?.scrollIntoView({ behavior: 'smooth' });
-//     };
-
-//     const toggleChatExpansion = (chatId) => {
-//         setExpandedChats(prev => ({
-//             ...prev,
-//             [chatId]: !prev[chatId]
-//         }));
-//     };
-
-//     // ובפונקציה markAsRead
-// const markAsRead = (chat) => {
-//     if (chat && chat.read !== true && chat.from !== type) {
-//       dispatch(setIsRead(chat.chatId));
-
-//       const updatedChat = {
-//         ...chat,
-//         read: true
-//       };
-
-//       dispatch(editChatThunk(updatedChat));
-//     }
-//   };
-
-//     const formatDate = (dateString) => {
-//         try {
-//             const date = new Date(dateString);
-//             return date.toLocaleDateString('en-US', {
-//                 year: 'numeric',
-//                 month: 'short',
-//                 day: 'numeric',
-//                 hour: '2-digit',
-//                 minute: '2-digit'
-//             });
-//         } catch (e) {
-//             return dateString;
-//         }
-//     };
-
-//     return (
-//         <Box sx={{ p: { xs: 2, md: 4 }, position: 'relative' }} ref={topRef}>
-//             <Fade in={true} timeout={1000}>
-//                 <Box sx={{ textAlign: 'center', mb: 6 }}>
-//                     <Typography
-//                         variant="h4"
-//                         component="h1"
-//                         fontWeight="700"
-//                         color="#2c3e50"
-//                         sx={{ mb: 2, fontSize: { xs: '1.75rem', md: '2.125rem' } }}
-//                     >
-//                         Your Recent Messages
-//                     </Typography>
-//                     <Typography
-//                         variant="subtitle1"
-//                         color="#7f8c8d"
-//                         sx={{
-//                             maxWidth: 800,
-//                             mx: 'auto',
-//                             mb: 4,
-//                             lineHeight: 1.8,
-//                             px: { xs: 2, md: 0 }
-//                         }}
-//                     >
-//                         Stay updated with your latest conversations. Unread messages are highlighted for your convenience.
-//                     </Typography>
-//                 </Box>
-//             </Fade>
-
-//             <Container maxWidth="md">
-//                 <Fade in={true} timeout={1200}>
-//                     <Box>
-//                         {myChats.length === 0 ? (
-//                             <Paper
-//                                 elevation={0}
-//                                 sx={{
-//                                     p: 4,
-//                                     borderRadius: 3,
-//                                     background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-//                                     textAlign: 'center'
-//                                 }}
-//                             >
-//                                 <Typography variant="h6" color="#2c3e50">
-//                                     No messages yet
-//                                 </Typography>
-//                                 <Typography variant="body2" color="#7f8c8d" sx={{ mt: 1 }}>
-//                                     Your recent conversations will appear here
-//                                 </Typography>
-//                             </Paper>
-//                         ) : (
-//                             myChats.map((chat, index) => {
-//                                 const isUnread = chat && chat.read === false && chat.from !== type;
-
-
-//                                 return (
-//                                     <Fade in={true} timeout={1000 + (index * 200)} key={chat.chatId || index}>
-//                                         <Paper
-//                                             elevation={isUnread ? 3 : 0}
-//                                             sx={{
-//                                                 mb: 3,
-//                                                 borderRadius: 2,
-//                                                 overflow: 'hidden',
-//                                                 border: isUnread ? '2px solid #4facfe' : '1px solid #e0e0e0',
-//                                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-//                                                 '&:hover': {
-//                                                     transform: 'translateY(-3px)',
-//                                                     boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)'
-//                                                 },
-//                                                 ...(isUnread && {
-//                                                     borderLeft: '8px solid #4facfe',
-//                                                     background: 'linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(195, 207, 226, 0.25) 100%)',
-//                                                     boxShadow: '0 4px 15px rgba(79, 172, 254, 0.2)'
-//                                                 })
-//                                             }}
-//                                         >
-//                                             <Box sx={{ p: { xs: 2, md: 3 } }}>
-//                                                 <Box sx={{
-//                                                     display: 'flex',
-//                                                     flexDirection: { xs: 'column', sm: 'row' },
-//                                                     justifyContent: 'space-between',
-//                                                     alignItems: { xs: 'flex-start', sm: 'center' },
-//                                                     gap: { xs: 2, sm: 0 }
-//                                                 }}>
-//                                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-//                                                         <Avatar
-//                                                             sx={{
-//                                                                 bgcolor: isUnread ? 'rgba(79, 172, 254, 0.2)' : 'rgba(195, 207, 226, 0.1)',
-//                                                                 color: isUnread ? '#4facfe' : '#7f8c8d',
-//                                                                 mr: 2,
-//                                                                 width: { xs: 40, md: 48 },
-//                                                                 height: { xs: 40, md: 48 },
-//                                                                 border: isUnread ? '2px solid #4facfe' : 'none'
-//                                                             }}
-//                                                         >
-//                                                             {isUnread ? <MailIcon /> : <MailOutlineIcon />}
-//                                                         </Avatar>
-//                                                         <Box>
-//                                                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5, flexWrap: 'wrap' }}>
-//                                                                 <Typography
-//                                                                     variant="subtitle1"
-//                                                                     fontWeight={isUnread ? "700" : "400"}
-//                                                                     color={isUnread ? "#4facfe" : "#2c3e50"}
-//                                                                     sx={{ mr: 1 }}
-//                                                                 >
-//                                                                     Message {index + 1}
-//                                                                 </Typography>
-//                                                                 {isUnread && (
-//                                                                     <Chip
-//                                                                         label="New"
-//                                                                         size="small"
-//                                                                         sx={{
-//                                                                             bgcolor: 'rgba(79, 172, 254, 0.2)',
-//                                                                             color: '#4facfe',
-//                                                                             fontWeight: 700,
-//                                                                             height: 24,
-//                                                                             border: '1px solid #4facfe'
-//                                                                         }}
-//                                                                     />
-//                                                                 )}
-//                                                             </Box>
-//                                                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-//                                                                 <DateRangeIcon sx={{ fontSize: 16, color: isUnread ? '#4facfe' : '#7f8c8d', mr: 0.5 }} />
-//                                                                 <Typography
-//                                                                     variant="caption"
-//                                                                     color={isUnread ? '#4facfe' : '#7f8c8d'}
-//                                                                     fontWeight={isUnread ? 600 : 400}
-//                                                                 >
-//                                                                     {formatDate(chat.sendDate)}
-//                                                                 </Typography>
-//                                                             </Box>
-//                                                         </Box>
-//                                                     </Box>
-//                                                     <Button
-//                                                         variant={isUnread ? "contained" : "outlined"}
-//                                                         onClick={() => {
-//                                                             toggleChatExpansion(chat.chatId);
-//                                                             if (isUnread && !expandedChats[chat.chatId]) {
-//                                                                 markAsRead(chat);
-//                                                             }
-//                                                         }}
-//                                                         endIcon={expandedChats[chat.chatId] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-//                                                         sx={{
-//                                                             borderRadius: '8px',
-//                                                             textTransform: 'none',
-//                                                             width: { xs: '100%', sm: 'auto' },
-//                                                             ...(isUnread ? {
-//                                                                 background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-//                                                                 color: 'white',
-//                                                                 boxShadow: '0 4px 10px rgba(79, 172, 254, 0.3)',
-//                                                                 '&:hover': {
-//                                                                     background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 80%)',
-//                                                                     boxShadow: '0 6px 15px rgba(79, 172, 254, 0.4)',
-//                                                                 }
-//                                                             } : {
-//                                                                 borderColor: '#c3cfe2',
-//                                                                 color: '#2c3e50',
-//                                                                 '&:hover': {
-//                                                                     borderColor: '#4facfe',
-//                                                                     backgroundColor: 'rgba(79, 172, 254, 0.05)',
-//                                                                 }
-//                                                             })
-//                                                         }}
-//                                                     >
-//                                                         {expandedChats[chat.chatId] ? 'Hide message' : (isUnread ? 'Read new message' : 'View message')}
-//                                                     </Button>
-//                                                 </Box>
-
-//                                                 <Collapse in={expandedChats[chat.chatId]} timeout="auto" unmountOnExit>
-//                                                     <Divider sx={{ my: 2 }} />
-//                                                     <Paper
-//                                                         elevation={0}
-//                                                         sx={{
-//                                                             p: { xs: 2, md: 3 },
-//                                                             borderRadius: 2,
-//                                                             background: 'linear-gradient(135deg, rgba(245, 247, 250, 0.05) 0%, rgba(195, 207, 226, 0.05) 100%)',
-//                                                             border: '1px solid rgba(195, 207, 226, 0.1)',
-//                                                             mt: 1
-//                                                         }}
-//                                                     >
-//                                                         <Typography variant="body1" sx={{ lineHeight: 1.8, wordBreak: 'break-word' }}>
-//                                                             {chat.information}
-//                                                         </Typography>
-//                                                     </Paper>
-//                                                 </Collapse>
-//                                             </Box>
-//                                         </Paper>
-//                                     </Fade>
-//                                 )
-//                             })
-//                         )}
-//                     </Box>
-//                 </Fade>
-//             </Container>
-
-//             {/* Scroll to top button */}
-//             <Button
-//                 variant="contained"
-//                 color="primary"
-//                 onClick={scrollToTop}
-//                 sx={{
-//                     position: 'fixed',
-//                     bottom: 20,
-//                     right: 20,
-//                     minWidth: 0,
-//                     width: 50,
-//                     height: 50,
-//                     borderRadius: '50%',
-//                     boxShadow: '0 4px 15px rgba(195, 207, 226, 0.4)',
-//                     background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-//                     color: '#2c3e50',
-//                     '&:hover': {
-//                         background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 80%)',
-//                         boxShadow: '0 6px 20px rgba(195, 207, 226, 0.6)',
-//                     },
-//                     zIndex: 1000,
-//                     display: 'flex',
-//                     justifyContent: 'center',
-//                     alignItems: 'center'
-//                 }}
-//             >
-//                 <KeyboardArrowUpIcon />
-//             </Button>
-//         </Box>
-//     );
-// };
-
-
-////////////////////////////////////////////////
-
-
-
 import React, { useState, useRef, useEffect } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
 import {
     Box,
     Typography,
@@ -361,7 +15,8 @@ import {
     Collapse,
     Chip,
     useMediaQuery,
-    useTheme
+    useTheme,
+    Grid
 } from '@mui/material';
 import { useDispatch, useSelector } from "react-redux";
 import { editChatThunk } from "../redux/slices/edit/editChatThunk";
@@ -379,17 +34,22 @@ export const LastChats = () => {
     const applications = useSelector(state => state.application.applications);
     const users = useSelector(state => state.user.users);
     const userType = useSelector(state => state.user.t);
-
     const dispatch = useDispatch();
     const [expandedChats, setExpandedChats] = useState({});
     const topRef = useRef(null);
     const theme = useTheme();
-
+    const [sortBy, setSortBy] = useState('none');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredChats, setFilteredChats] = useState([]);
 
     useEffect(() => {
         // Scroll to top when component mounts
         window.scrollTo(0, 0);
     }, []);
+
+    useEffect(() => {
+        setFilteredChats(myChats);
+    }, [myChats]);
 
     const scrollToTop = () => {
         topRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -405,12 +65,10 @@ export const LastChats = () => {
     const markAsRead = (chat) => {
         if (chat && chat.read !== true && chat.from !== userType) {
             dispatch(setIsRead(chat.chatId));
-
             const updatedChat = {
                 ...chat,
                 read: true
             };
-
             dispatch(editChatThunk(updatedChat));
         }
     };
@@ -447,6 +105,83 @@ export const LastChats = () => {
         return chat.from === userType;
     };
 
+    // פונקציה לטיפול במיון - עם תיקון
+    const handleSort = (sortType) => {
+        setSortBy(sortType);
+
+        let sortedChats = [...myChats];
+
+        if (sortType === 'date') {
+            sortedChats.sort((a, b) => new Date(b.sendDate) - new Date(a.sendDate));
+        } else if (sortType === 'sender') {
+            sortedChats.sort((a, b) => {
+                // בדיקה אם users הוא מערך
+                const usersArray = Array.isArray(users) ? users : [];
+                const senderA = usersArray.find(user => user.id === a.from)?.name || a.from || '';
+                const senderB = usersArray.find(user => user.id === b.from)?.name || b.from || '';
+                return senderA.localeCompare(senderB);
+            });
+        } else if (sortType === 'receiver') {
+            sortedChats.sort((a, b) => {
+                // בדיקה אם users הוא מערך
+                const usersArray = Array.isArray(users) ? users : [];
+                const receiverA = usersArray.find(user => user.id === a.to)?.name || a.to || '';
+                const receiverB = usersArray.find(user => user.id === b.to)?.name || b.to || '';
+                return receiverA.localeCompare(receiverB);
+            });
+        }
+
+        setFilteredChats(sortedChats);
+    };
+
+    // פונקציה לטיפול בחיפוש - עם תיקון מלא
+    const handleSearch = () => {
+        if (!searchTerm.trim()) {
+            setFilteredChats([...myChats]);
+            return;
+        }
+
+        const term = searchTerm.toLowerCase();
+        // בדיקה אם users הוא מערך
+        const usersArray = Array.isArray(users) ? users : [];
+
+        const results = myChats.filter(chat => {
+            // בדיקה שכל השדות קיימים לפני השימוש ב-toLowerCase
+            const information = chat.information || '';
+            const sender = usersArray.find(user => user?.id === chat.from)?.name || chat.from || '';
+            const receiver = usersArray.find(user => user?.id === chat.to)?.name || chat.to || '';
+
+            // בדיקה שהפונקציה getApplicationDetails קיימת ומחזירה אובייקט תקין
+            let appSubject = '';
+            try {
+                const appDetails = getApplicationDetails(chat.applicationId);
+                appSubject = appDetails?.subject || '';
+            } catch (error) {
+                console.error('Error getting application details:', error);
+            }
+
+            // בדיקה שהפונקציה formatDate קיימת ומחזירה ערך תקין
+            let formattedDate = '';
+            try {
+                formattedDate = formatDate(chat.sendDate) || '';
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                formattedDate = chat.sendDate || '';
+            }
+
+            // עכשיו אפשר להשתמש ב-toLowerCase בבטחה
+            return (
+                information.toLowerCase().includes(term) ||
+                sender.toLowerCase().includes(term) ||
+                receiver.toLowerCase().includes(term) ||
+                appSubject.toLowerCase().includes(term) ||
+                formattedDate.toLowerCase().includes(term)
+            );
+        });
+
+        setFilteredChats(results);
+    };
+
     return (
         <Box sx={{ p: { xs: 2, md: 4 }, position: 'relative' }} ref={topRef}>
             <Fade in={true} timeout={1000}>
@@ -475,7 +210,111 @@ export const LastChats = () => {
                     </Typography>
                 </Box>
             </Fade>
-            <Container maxWidth="md">
+
+            <Box sx={{ mb: 4, display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2, justifyContent: 'space-between', alignItems: { xs: 'stretch', md: 'center' } }}>
+                {/* Sort buttons */}
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: { xs: 'center', sm: 'flex-start' } }}>
+                    <Typography variant="subtitle1" sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+                    </Typography>
+                    <Button
+                        variant={sortBy === 'date' ? 'contained' : 'outlined'}
+                        size="small"
+                        onClick={() => handleSort('date')}
+                        startIcon={<DateRangeIcon />}
+                        sx={{
+                            background: sortBy === 'date' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)' : 'transparent',
+                            '&:hover': {
+                                background: sortBy === 'date' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)' : 'rgba(58, 123, 213, 0.1)'
+                            }
+                        }}
+                    >
+                        Date
+                    </Button>
+                    <Button
+                        variant={sortBy === 'sender' ? 'contained' : 'outlined'}
+                        size="small"
+                        onClick={() => handleSort('sender')}
+                        startIcon={<SendIcon />}
+                        sx={{
+                            background: sortBy === 'sender' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)' : 'transparent',
+                            '&:hover': {
+                                background: sortBy === 'sender' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)' : 'rgba(58, 123, 213, 0.1)'
+                            }
+                        }}
+                    >
+                        Sender
+                    </Button>
+                    <Button
+                        variant={sortBy === 'receiver' ? 'contained' : 'outlined'}
+                        size="small"
+                        onClick={() => handleSort('receiver')}
+                        startIcon={<ReceiveIcon />}
+                        sx={{
+                            background: sortBy === 'receiver' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)' : 'transparent',
+                            '&:hover': {
+                                background: sortBy === 'receiver' ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)' : 'rgba(58, 123, 213, 0.1)'
+                            }
+                        }}
+                    >
+                        Receiver
+                    </Button>
+                    <Button
+                        variant={sortBy === 'none' ? 'contained' : 'outlined'}
+                        size="small"
+                        onClick={() => handleSort('none')}
+                        startIcon={<RefreshIcon />}
+                        sx={{
+                            background: sortBy === 'none' ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' : 'transparent',
+                            color: sortBy === 'none' ? '#2c3e50' : 'inherit',
+                            '&:hover': {
+                                background: sortBy === 'none' ? 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 90%)' : 'rgba(195, 207, 226, 0.1)'
+                            }
+                        }}
+                    >
+                        Default View
+                    </Button>
+                </Box>
+
+                {/* Search */}
+                <Box sx={{ display: 'flex', gap: 1, flexGrow: { xs: 1, md: 0 }, maxWidth: { xs: '100%', md: '300px' }, mt: { xs: 2, md: 0 } }}>
+                    <TextField
+                        size="small"
+                        placeholder="Search messages..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                            endAdornment: searchTerm ? (
+                                <InputAdornment position="end">
+                                    <IconButton size="small" onClick={() => setSearchTerm('')}>
+                                        <ClearIcon fontSize="small" />
+                                    </IconButton>
+                                </InputAdornment>
+                            ) : null
+                        }}
+                        sx={{ flexGrow: 1 }}
+                    />
+                    <Button
+                        variant="contained"
+                        size="small"
+                        onClick={handleSearch}
+                        sx={{
+                            background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)',
+                            '&:hover': {
+                                background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)'
+                            }
+                        }}
+                    >
+                        Search
+                    </Button>
+                </Box>
+            </Box>
+
+            <Container maxWidth="lg">
                 <Fade in={true} timeout={1200}>
                     <Box>
                         {myChats.length === 0 ? (
@@ -496,186 +335,208 @@ export const LastChats = () => {
                                 </Typography>
                             </Paper>
                         ) : (
-                            myChats.map((chat, index) => {
+                            (filteredChats.length > 0 || sortBy !== 'none' || searchTerm ? filteredChats : myChats).map((chat, index) => {
                                 const isUnread = chat && chat.read === false && chat.from !== userType;
                                 const isSent = isSentByCurrentUser(chat);
                                 const applicationDetails = getApplicationDetails(chat.applicationId);
-
                                 const senderDetails = Array.isArray(users)
                                     ? users.find(user => user.id === (chat.userId || chat.from)) || { name: 'Unknown', id: 'Unknown' }
                                     : { name: 'Unknown', id: 'Unknown' };
+                                // Updated gradient colors based on requirements
+                                // הקוד המעודכן עם צבע עוד יותר בהיר להודעות שנשלחו
+                                // הקוד המעודכן עם צבע בהיר מאוד מאוד להודעות שנשלחו (דומה להודעות שהתקבלו)
+                                const gradientBackground = isUnread
+                                    ? 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)' // כחול כהה להודעות שלא נקראו
+                                    : isSent
+                                        ? 'linear-gradient(135deg, #EBF5FB 0%, #D6EAF8 100%)' // כחול בהיר מאוד מאוד להודעות שנשלחו
+                                        : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)'; // אפור בהיר להודעות שהתקבלו ונקראו
+
+                                const textColor = isUnread ? '#ffffff' : '#2c3e50';
 
 
-                                // Determine gradient colors based on sent/received
-                                const gradientColors = isSent
-                                    ? 'linear-gradient(135deg, rgba(129, 236, 236, 0.15) 0%, rgba(162, 222, 208, 0.25) 100%)'
-                                    : 'linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(195, 207, 226, 0.25) 100%)';
-
-                                const borderColor = isSent ? '#81ecec' : '#4facfe';
-                                const iconColor = isSent ? '#00cec9' : '#4facfe';
-
+                                const borderColor = isUnread ? '#3a7bd5' : '#e0e0e0';
                                 return (
                                     <Fade in={true} timeout={1000 + (index * 200)} key={chat.chatId || index}>
                                         <Paper
-                                            elevation={isUnread ? 3 : 0}
+                                            elevation={isUnread ? 3 : 1}
                                             sx={{
                                                 mb: 3,
                                                 borderRadius: 2,
                                                 overflow: 'hidden',
-                                                border: isUnread ? `2px solid ${borderColor}` : '1px solid #e0e0e0',
+                                                border: `1px solid ${borderColor}`,
                                                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                                                 '&:hover': {
                                                     transform: 'translateY(-3px)',
                                                     boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)'
                                                 },
                                                 ...(isUnread && {
-                                                    borderLeft: `8px solid ${borderColor}`,
-                                                    background: gradientColors,
-                                                    boxShadow: `0 4px 15px rgba(79, 172, 254, 0.2)`
+                                                    borderLeft: '8px solid #3a7bd5',
+                                                    boxShadow: '0 4px 15px rgba(58, 123, 213, 0.2)'
                                                 }),
-                                                ...(isSent && {
-                                                    borderLeft: `8px solid ${borderColor}`,
-                                                    background: gradientColors
-                                                })
+                                                background: gradientBackground,
+                                                color: textColor
                                             }}
                                         >
-                                            <Box sx={{ p: { xs: 2, md: 3 } }}>
-                                                <Box sx={{
-                                                    display: 'flex',
-                                                    flexDirection: { xs: 'column', sm: 'row' },
-                                                    justifyContent: 'space-between',
-                                                    alignItems: { xs: 'flex-start', sm: 'center' },
-                                                    gap: { xs: 2, sm: 0 }
-                                                }}>
-                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Avatar
-                                                            sx={{
-                                                                bgcolor: isUnread ? `rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.2)` : 'rgba(195, 207, 226, 0.1)',
-                                                                color: isUnread ? iconColor : '#7f8c8d',
-                                                                mr: 2,
-                                                                width: { xs: 40, md: 48 },
-                                                                height: { xs: 40, md: 48 },
-                                                                border: isUnread ? `2px solid ${borderColor}` : 'none'
-                                                            }}
-                                                        >
-                                                            {isSent ? <SendIcon /> : <ReceiveIcon />}
-                                                        </Avatar>
-                                                        <Box>
-                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5, flexWrap: 'wrap' }}>
+                                            <Box sx={{ p: 2 }}>
+                                                <Grid container spacing={2} alignItems="center">
+                                                    <Grid item xs={12} sm={9} md={10}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Avatar
+                                                                sx={{
+                                                                    bgcolor: 'rgba(255, 255, 255, 0.2)',
+                                                                    color: textColor,
+                                                                    mr: 2,
+                                                                    width: 40,
+                                                                    height: 40
+                                                                }}
+                                                            >
+                                                                {isSent ? <SendIcon /> : <ReceiveIcon />}
+                                                            </Avatar>
+                                                            <Box sx={{
+                                                                display: 'flex',
+                                                                alignItems: { xs: 'flex-start', md: 'center' },
+                                                                flexDirection: { xs: 'column', md: 'row' },
+                                                                flexWrap: 'wrap',
+                                                                width: '100%',
+                                                                gap: { xs: 1, md: 0 }
+                                                            }}>
+
                                                                 <Typography
                                                                     variant="subtitle1"
-                                                                    fontWeight={isUnread ? "700" : "400"}
-                                                                    color={isUnread ? iconColor : "#2c3e50"}
-                                                                    sx={{ mr: 1 }}
+                                                                    fontWeight={isUnread ? "700" : "500"}
+                                                                    color="inherit"
+                                                                    sx={{ mr: 2 }}
                                                                 >
-                                                                    {isSent ? "Sent" : "Received"} Message
+                                                                    {"Application  " + applicationDetails.applicationId + " | "}
+                                                                    {isSent ? "   Sent" : "   Received"}:
                                                                 </Typography>
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    mr: { xs: 0, md: 2 },
+                                                                    mb: { xs: 0.5, md: 0 },
+                                                                    '& .MuiSvgIcon-root': {
+                                                                        fontSize: 16,
+                                                                        mr: 0.5,
+                                                                        color: 'inherit',
+                                                                        opacity: 0.8
+                                                                    },
+                                                                    '& .MuiTypography-root': {
+                                                                        color: 'inherit',
+                                                                        opacity: 0.9
+                                                                    }
+                                                                }}>
+                                                                    <PersonIcon />
+                                                                    <Typography variant="body2">
+                                                                        {senderDetails.name || 'Unknown'}
+                                                                    </Typography>
+                                                                </Box>
+
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    mr: { xs: 0, md: 2 },
+                                                                    mb: { xs: 0.5, md: 0 },
+                                                                    '& .MuiSvgIcon-root': {
+                                                                        fontSize: 16,
+                                                                        mr: 0.5,
+                                                                        color: 'inherit',
+                                                                        opacity: 0.8
+                                                                    },
+                                                                    '& .MuiTypography-root': {
+                                                                        color: 'inherit',
+                                                                        opacity: 0.9,
+                                                                        maxWidth: { xs: '200px', sm: '300px', md: 'auto' },
+                                                                        overflow: 'hidden',
+                                                                        textOverflow: 'ellipsis',
+                                                                        whiteSpace: 'nowrap'
+                                                                    }
+                                                                }}>
+                                                                    <AssignmentIcon />
+                                                                    <Typography variant="body2">
+                                                                        {applicationDetails.subject}
+                                                                    </Typography>
+                                                                </Box>
+
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    '& .MuiSvgIcon-root': {
+                                                                        fontSize: 16,
+                                                                        mr: 0.5,
+                                                                        color: 'inherit',
+                                                                        opacity: 0.8
+                                                                    },
+                                                                    '& .MuiTypography-root': {
+                                                                        color: 'inherit',
+                                                                        opacity: 0.9
+                                                                    }
+                                                                }}>
+                                                                    <DateRangeIcon />
+                                                                    <Typography variant="body2">
+                                                                        {formatDate(chat.sendDate)}
+                                                                    </Typography>
+                                                                </Box>
+
                                                                 {isUnread && (
                                                                     <Chip
                                                                         label="New"
                                                                         size="small"
                                                                         sx={{
-                                                                            bgcolor: `rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.2)`,
-                                                                            color: iconColor,
+                                                                            ml: { xs: 0, md: 2 },
+                                                                            mt: { xs: 0.5, md: 0 },
+                                                                            bgcolor: 'rgba(255, 255, 255, 0.2)',
+                                                                            color: 'inherit',
                                                                             fontWeight: 700,
                                                                             height: 24,
-                                                                            border: `1px solid ${borderColor}`
+                                                                            border: '1px solid rgba(255, 255, 255, 0.3)'
                                                                         }}
                                                                     />
                                                                 )}
-                                                                <Chip
-                                                                    icon={isSent ? <SendIcon /> : <ReceiveIcon />}
-                                                                    label={isSent ? "Sent by you" : "Received"}
-                                                                    size="small"
-                                                                    sx={{
-                                                                        ml: 1,
-                                                                        bgcolor: `rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.1)`,
-                                                                        color: iconColor,
-                                                                        border: `1px solid ${borderColor}`
-                                                                    }}
-                                                                />
-                                                            </Box>
-                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                                                                <PersonIcon sx={{ fontSize: 16, color: '#7f8c8d', mr: 0.5 }} />
-                                                                <Typography
-                                                                    variant="caption"
-                                                                    color="#7f8c8d"
-                                                                >
-                                                                    {senderDetails.name || 'Unknown'} (ID: {senderDetails.id || 'Unknown'})
-                                                                </Typography>
-                                                            </Box>
-                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-                                                                <AssignmentIcon sx={{ fontSize: 16, color: '#7f8c8d', mr: 0.5 }} />
-                                                                <Typography
-                                                                    variant="caption"
-                                                                    color="#7f8c8d"
-                                                                >
-                                                                    Application: {applicationDetails.subject} (ID: {applicationDetails.applicationId})
-                                                                </Typography>
-                                                            </Box>
-                                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                                <DateRangeIcon sx={{ fontSize: 16, color: isUnread ? iconColor : '#7f8c8d', mr: 0.5 }} />
-                                                                <Typography
-                                                                    variant="caption"
-                                                                    color={isUnread ? iconColor : '#7f8c8d'}
-                                                                    fontWeight={isUnread ? 600 : 400}
-                                                                >
-                                                                    {formatDate(chat.sendDate)}
-                                                                </Typography>
                                                             </Box>
                                                         </Box>
-                                                    </Box>
-                                                    <Button
-                                                        variant={isUnread ? "contained" : "outlined"}
-                                                        onClick={() => {
-                                                            toggleChatExpansion(chat.chatId);
-                                                            if (isUnread && !expandedChats[chat.chatId]) {
-                                                                markAsRead(chat);
-                                                            }
-                                                        }}
-                                                        endIcon={expandedChats[chat.chatId] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                                        sx={{
-                                                            borderRadius: '8px',
-                                                            textTransform: 'none',
-                                                            width: { xs: '100%', sm: 'auto' },
-                                                            ...(isUnread ? {
-                                                                background: isSent
-                                                                    ? 'linear-gradient(135deg, #81ecec 0%, #00cec9 100%)'
-                                                                    : 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                                                                color: 'white',
-                                                                boxShadow: `0 4px 10px rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.3)`,
-                                                                '&:hover': {
-                                                                    background: isSent
-                                                                        ? 'linear-gradient(135deg, #81ecec 0%, #00cec9 80%)'
-                                                                        : 'linear-gradient(135deg, #4facfe 0%, #00f2fe 80%)',
-
-                                                                    boxShadow: `0 6px 15px rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.4)`,
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={3} md={2} sx={{
+                                                        textAlign: { xs: 'left', sm: 'right' },
+                                                        mt: { xs: 1, sm: 0 }
+                                                    }}>
+                                                        <Button
+                                                            variant="contained"
+                                                            onClick={() => {
+                                                                toggleChatExpansion(chat.chatId);
+                                                                if (isUnread && !expandedChats[chat.chatId]) {
+                                                                    markAsRead(chat);
                                                                 }
-                                                            } : {
-                                                                borderColor: isSent ? '#81ecec' : '#c3cfe2',
-                                                                color: isSent ? '#00cec9' : '#2c3e50',
+                                                            }}
+                                                            endIcon={expandedChats[chat.chatId] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                            sx={{
+                                                                borderRadius: '8px',
+                                                                textTransform: 'none',
+                                                                background: 'rgba(255, 255, 255, 0.2)',
+                                                                color: textColor,
+                                                                border: '1px solid rgba(255, 255, 255, 0.3)',
                                                                 '&:hover': {
-                                                                    borderColor: isSent ? '#00cec9' : '#4facfe',
-                                                                    backgroundColor: `rgba(${isSent ? '0, 206, 201' : '79, 172, 254'}, 0.05)`,
-                                                                }
-                                                            })
-                                                        }}
-                                                    >
-                                                        {expandedChats[chat.chatId] ? 'Hide message' : (isUnread ? 'Read new message' : 'View message')}
-                                                    </Button>
-                                                </Box>
+                                                                    background: 'rgba(255, 255, 255, 0.3)',
+                                                                },
+                                                                width: { xs: 'auto', sm: '100%' },
+                                                                maxWidth: { sm: '120px' }
+                                                            }}
+                                                        >
+                                                            {expandedChats[chat.chatId] ? 'Hide' : 'View'}
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
                                                 <Collapse in={expandedChats[chat.chatId]} timeout="auto" unmountOnExit>
-                                                    <Divider sx={{ my: 2 }} />
+                                                    <Divider sx={{ my: 2, bgcolor: 'rgba(255, 255, 255, 0.2)' }} />
+
                                                     <Paper
                                                         elevation={0}
                                                         sx={{
-                                                            p: { xs: 2, md: 3 },
+                                                            p: 2,
                                                             borderRadius: 2,
-                                                            background: isSent
-                                                                ? 'linear-gradient(135deg, rgba(129, 236, 236, 0.05) 0%, rgba(0, 206, 201, 0.05) 100%)'
-                                                                : 'linear-gradient(135deg, rgba(245, 247, 250, 0.05) 0%, rgba(195, 207, 226, 0.05) 100%)',
-                                                            border: `1px solid rgba(${isSent ? '0, 206, 201' : '195, 207, 226'}, 0.1)`,
-                                                            mt: 1
+                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                            color: textColor
                                                         }}
                                                     >
                                                         <Typography variant="body1" sx={{ lineHeight: 1.8, wordBreak: 'break-word' }}>
@@ -692,10 +553,10 @@ export const LastChats = () => {
                     </Box>
                 </Fade>
             </Container>
+
             {/* Scroll to top button */}
             <Button
                 variant="contained"
-                color="primary"
                 onClick={scrollToTop}
                 sx={{
                     position: 'fixed',

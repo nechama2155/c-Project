@@ -12,17 +12,13 @@ import { FlagCircleTwoTone } from "@mui/icons-material";
 export const NewApplication = () => {
 
     const g = useSelector(state=>state.user.users);
-    const assessors = useSelector(state=> state.assessor.assessors);
     const thisassessor = useSelector(state=> state.application.thisAssessor);
-    const applications = useSelector(state=> state.application.applications);
-    const code  = useSelector(state=> state.application.code);
     const [newCustomer, setNewCustomer] = useState({});
     const [directionsArr, setDirectionsArr] = useState({});
     const [apartmentData, setApartmentData] = useState({apartmentId:0,customerId:""});
     const [applicationData, setApplicationData] = useState({applicationId:0,assessorId:"",applicationDate:new Date().toISOString(),lastApplicationDate:new Date().toISOString(),applicationStatus:11});
     const [allData, setAllData] = useState({});
     const [flag, setFlag] = useState(false);
-    const apartments = useSelector(state=>state.apartmentDetails?.apartmentsDetails);
     const [personalDetails, setPersonalDetails] = useState(false);
     const [finish, setFinish] = useState(false);
     const [str, setStr] = useState("");
@@ -35,8 +31,7 @@ export const NewApplication = () => {
     const [year, setYear] = useState("");
     const dispatch = useDispatch();
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-    const navigate = useNavigate();
-    const refdialog = useRef();
+    
 
 
     useEffect(() => {
@@ -55,9 +50,7 @@ export const NewApplication = () => {
       },[thisassessor])
 
      useEffect(() => {
-    //  dispatch(assessorThunk());
      cc();
-    //  refdialog.current.showModal();
     }, [])
     const open = () => {
         setLoading(true);
@@ -93,21 +86,27 @@ const createNewApplication = () => {
     }
 
 
-    const funToPay = () =>{
-        let summ ;
-        summ = parseInt((2025-parseInt(year))*1000+(parseInt(size)*1000));
+    const funToPay = () => {
+        const currentYear = new Date().getFullYear();
+        const sizeNum = parseInt(size) || 0; 
+        const yearNum = parseInt(year) || currentYear;
+        
+        const yearCost = (currentYear - yearNum) * 200;
+        const sizeCost = sizeNum * 250;
+        
+        const summ = yearCost + sizeCost;
         setSum(summ);
         setnextt(true);
-    }
+      }
+      
 
 
         return <div >
-               {/* <dialog ref={refdialog}>
-                <Button onClick={()=>{refdialog.current.close()}}>✖</Button> */}
+              
             {!personalDetails && !finish && <div>
                 {!payd&& <>{!nextt && <>
-                <TextField id="standard-basic" label="enter your apartment size" variant="standard"  onChange={(e) =>{setSize({...size,size:e.target.value})}  }/>
-                <TextField id="standard-basic" label="enter your apartment Construction year" variant="standard"  onChange={(e) =>{setYear({...year,year:e.target.value})}  }/>
+                <TextField id="standard-basic" label="enter your apartment size" variant="standard"  onChange={(e) =>{setSize(e.target.value)}  }/>
+                <TextField id="standard-basic" label="enter your apartment Construction year" variant="standard"  onChange={(e) =>{setYear(e.target.value)}  }/>
                 <Button  variant="outlined"  onClick={() => {funToPay()}}>next</Button>
                 </>
                 } 
@@ -128,14 +127,7 @@ const createNewApplication = () => {
                 <TextField id="standard-basic" label="city" variant="standard"  onChange={(e) => setNewCustomer({ ...newCustomer, customerCity: e.target.value })}/>
                 <TextField id="standard-basic" label="email" variant="standard" type="email" onChange={(e) => setNewCustomer({ ...newCustomer, customerEmail: e.target.value })}/>
                 
-                {/* <label >adress</label>
-                <input type="text" onChange={(e) => setNewCustomer({ ...newCustomer, customerAddress: e.target.value })} />
-                <label >phone</label>
-                <input type="text" onChange={(e) => setNewCustomer({ ...newCustomer, customerPhone: e.target.value })} />
-                <label >city</label>
-                <input type="text" onChange={(e) => setNewCustomer({ ...newCustomer, customerCity: e.target.value })} />
-                <label >email</label>
-                <input type="text" onChange={(e) => setNewCustomer({ ...newCustomer, customerEmail: e.target.value })} /> */}
+            
                 <Button  variant="outlined"  onClick={() => {setPersonalDetails(true)}}>next</Button>
                 
                 
@@ -175,43 +167,9 @@ const createNewApplication = () => {
               <Button></Button>
               </>
             }
-{/* </dialog> */}
         </div>
     }
 
 
 
 
-
-
-    // {
-    //     "apartment":{
-    // "airDirections": 2,
-    // "apartmentAddress": "fd",
-    // "apartmentCity": "ff",
-    // "apartmentId": "",
-    // "apartmentSize": 100,
-    // "customerId": "",
-    // "directions": " east south",
-    // "elevator": true,
-    // "floor": 2
-     
-    // },
-    // "application":
-    // {
-    // "applicationDate": Mon Mar 31 2025 13:33:44 GMT+0300 (Israel Daylight Time) {},
-    // "applicationId": "",
-    // "applicationStatus": 11,
-    // "assessorId": "",
-    // "lastApplicationDate": Mon Mar 31 2025 13:33:44 GMT+0300 (Israel Daylight Time) {}
-    
-    // },
-    // "customer":{ 
-    // "customerAddress": "q",
-    // "customerCity": "fd",
-    // "customerEmail": "hjh",
-    // "customerFirstName": "q",
-    // "customerId": "147253698",
-    // "customerLastName": "q",
-    // "customerPhone": "1236549873"}
-    // }

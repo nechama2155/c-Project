@@ -30,7 +30,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ReceiveIcon from '@mui/icons-material/MoveToInbox';
 
 export const LastChats = () => {
-    const myChats = useSelector(state => state.chat.chats);
+    const myChats = useSelector(state => state.chat.lastChats);
     const applications = useSelector(state => state.application.applications);
     const users = useSelector(state => state.user.users);
     const userType = useSelector(state => state.user.t);

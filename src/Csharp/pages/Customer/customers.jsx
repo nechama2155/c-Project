@@ -14,6 +14,7 @@ import { myCustomersThunk } from "../../redux/slices/get by assessor/myCustomers
 
 import GridViewIcon from '@mui/icons-material/GridView';
 import { setCustomerChose } from "../../redux/slices/customerSlice";
+import { setFull } from "../../redux/slices/userSlice";
 
 export const Customers = () => {
 
@@ -66,7 +67,7 @@ export const Customers = () => {
                      
                         {/* <MailOutlineOutlinedIcon /> */}
                             {/* {((chat && !sent ) || selectedAs !== d) &&  */}
-                            <Button variant="text" onClick={() => {dispatch(setCustomerChose(d)) ;navigate('/home/fullApplications') }}><GridViewIcon/>all applications</Button>
+                            <Button variant="text" onClick={() => {dispatch(setFull(false));dispatch(setCustomerChose(d)) ;navigate('/home/fullApplications') }}><GridViewIcon/>all applications</Button>
                             {/* } */}
                             {/* {(sent && !chat)&&selectedAs === d && <> */}
                                 {/* <Button onClick={() => { dispatch(setChoseDetails(d));navigate('newChat') }}><BookmarkAddOutlinedIcon />new chat</Button><br />

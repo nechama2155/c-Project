@@ -716,7 +716,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
 
 // Redux actions
-import { myChats, setIsRead } from "../redux/slices/chatSlice";
+import { myChats, setIsRead, setLastChats } from "../redux/slices/chatSlice";
 import { myApplicationsThunk } from "../redux/slices/get by assessor/myApplicationsThunk";
 import { applicationThunk } from "../redux/slices/get/applicatiionThunk";
 import { yourApplicationsThunk } from "../redux/slices/get by customer/yourApplicationsThunk";
@@ -726,6 +726,7 @@ import './cssPages/h.css';
 import { fullAssessorThunk } from "../redux/slices/get/fullAssessorThunk";
 import { fullAssessorManagerThunk } from "../redux/slices/get/fullAssessorManagerThunk";
 import { fullCustomerThunk } from "../redux/slices/get/fullCustomerThunk";
+import { setFull } from "../redux/slices/userSlice";
 
 export const Home = () => {
   const type = useSelector(state => state.user.t);
@@ -762,6 +763,7 @@ export const Home = () => {
     }
   }, [type, thisAssessor, thisCustomer, dispatch]);
 
+  useEffect(()=>{dispatch(setFull(true));}, [dispatch]);
   // Calculate unread messages
   // useEffect(() => {
   //   debugger
@@ -821,7 +823,8 @@ useEffect(() => {
           { text: 'My Apartment Details', icon: <ApartmentOutlinedIcon />, path: 'apartmentDetails' },
           { text: 'My Folders', icon: <FolderOutlinedIcon />, path: 'folders' },
           { text: 'FolderDemo', icon: <FolderOutlinedIcon />, path: 'folderDemo' },
-          { text: 'FilePreview', icon: <FolderOutlinedIcon />, path: 'filePreview' }
+          { text: 'FilePreview', icon: <FolderOutlinedIcon />, path: 'filePreview' },
+          { text: 'FullApplications', icon: <FolderOutlinedIcon />, path: 'fullApplications' }
         ];
       } else {
         return [
@@ -832,7 +835,7 @@ useEffect(() => {
           { text: 'Applications', icon: <AppsOutlinedIcon />, path: 'applications' },
           { text: 'Apartment Details', icon: <ApartmentOutlinedIcon />, path: 'apartmentDetails' },
           { text: 'Folders', icon: <FolderOutlinedIcon />, path: 'folders' },
-
+          { text: 'FullApplications', icon: <FolderOutlinedIcon />, path: 'fullApplications' }
         ];
       }
     } else if (type === 'c') {
@@ -937,7 +940,7 @@ useEffect(() => {
             <Tooltip title="Messages">
               <IconButton
                 color="inherit"
-                onClick={() => navigate('/home/lastChats')}
+                onClick={() => {dispatch(setLastChats(chats));navigate('/home/lastChats')}}
                 sx={{ position: 'relative' }}
               >
                 <Badge badgeContent={ready} color="primary">

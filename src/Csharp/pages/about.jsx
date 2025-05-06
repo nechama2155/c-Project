@@ -35,6 +35,11 @@ export const About = () => {
   // };
 useEffect(() => {
   // גלילה לראש הדף כשהקומפוננטה נטענת
+
+  // topRef.current?.scrollIntoView({
+  //   top: 80,
+  //   behavior: 'smooth'
+  // });
   window.scrollTo(0, 0);
 }, []);
   const features = [
@@ -80,6 +85,7 @@ useEffect(() => {
   ];
 
   return (
+    // sx={{ p: { xs: 2, md: 4 }, position: 'relative' }}
     <Box sx={{ p: { xs: 2, md: 4 }, position: 'relative' }} ref={topRef}>
       {/* Hero section */}
       <Fade in={true} timeout={1000}>

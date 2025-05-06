@@ -103,7 +103,7 @@ const createNewApplication = () => {
 
         return <div >
               
-            {!personalDetails && !finish && <div>
+            {  !finish && <div>
                 {!payd&& <>{!nextt && <>
                 <TextField id="standard-basic" label="enter your apartment size" variant="standard"  onChange={(e) =>{setSize(e.target.value)}  }/>
                 <TextField id="standard-basic" label="enter your apartment Construction year" variant="standard"  onChange={(e) =>{setYear(e.target.value)}  }/>
@@ -128,7 +128,7 @@ const createNewApplication = () => {
                 <TextField id="standard-basic" label="email" variant="standard" type="email" onChange={(e) => setNewCustomer({ ...newCustomer, customerEmail: e.target.value })}/>
                 
             
-                <Button  variant="outlined"  onClick={() => {setPersonalDetails(true)}}>next</Button>
+                {/* <Button  variant="outlined"  onClick={() => {setPersonalDetails(true)}}>next</Button> */}
                 
                 
                 <div>

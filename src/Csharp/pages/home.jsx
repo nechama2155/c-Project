@@ -763,17 +763,29 @@ export const Home = () => {
   }, [type, thisAssessor, thisCustomer, dispatch]);
 
   // Calculate unread messages
-  useEffect(() => {
-    let numRead = 0;
-    if (getChats && getChats.length > 0) {
-      getChats.forEach(c => {
-        if (!c.read) numRead++;
-      });
-      setReady(numRead);
-      // dispatch(setIsRead()); 
+  // useEffect(() => {
+  //   debugger
+  //   let numRead = 0;
+  //   if (getChats && getChats.length > 0) {
+  //     getChats.forEach(c => {
+  //       if (c.read===false) numRead++;
+  //     });
+  //     setReady(numRead);
+  //     // dispatch(setIsRead()); 
 
-    }
-  }, [getChats]);
+  //   }
+  // }, [getChats]);
+
+  // בתוך useEffect שבודק הודעות שלא נקראו
+useEffect(() => {
+  let numRead = 0;
+  if (getChats && Array.isArray(getChats) && getChats.length > 0) {
+    getChats.forEach(c => {
+      if (c && (c.read === false || c.read === undefined)) numRead++;
+    });
+    setReady(numRead);
+  }
+}, [getChats]);
 
   const toggleUserDetails = () => {
     setUserDetailsOpen(!userDetailsOpen);
@@ -1043,7 +1055,8 @@ export const Home = () => {
           flexGrow: 1,
           ml: { xs: 0, md: '250px' }, // Margin to account for fixed sidebar
           height: '100%',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          paddingTop: '64px' // Add padding to prevent content from being hidden behind the header
         }}>
           <Container maxWidth="xl" sx={{ height: '100%' }}>
             <Paper
@@ -1062,7 +1075,8 @@ export const Home = () => {
               <Box sx={{
                 flexGrow: 1,
                 overflow: 'auto', // This enables scrolling just for the outlet content
-                height: '100%'
+                height: '100%',
+                scrollPaddingTop: '64px' // Add scroll padding to ensure content isn't hidden
               }}>
                 <Outlet />
               </Box>
@@ -1070,7 +1084,6 @@ export const Home = () => {
           </Container>
         </Box>
       </Box>
-
       {/* User details drawer */}
       <Drawer
         anchor="right"

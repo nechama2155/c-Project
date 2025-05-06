@@ -12,6 +12,7 @@ export const INITIALSTATE = {
     chats:[],
     getChats:[],
     sendChats:[],
+    lastChats:[],
 
 }
 
@@ -32,43 +33,26 @@ reducers: {
     state.getChats = action.payload.get;
     state.sendChats = action.payload.send;
   },
-//   setIsRead(state,action){
-//     state.chats = state.chats.map(c=>{
-//       if(c.chatId === action.payload){
-//         c.read = true;
-//       }
-//     });
-//     state.getChats = state.getChats.map(c=>{
-//       if(c.chatId === action.payload){
-//         c.read = true;
-//       }
-//      });
-//     state.sendChats = state.sendChats.map(c=>{
-//       if(c.chatId === action.payload){
-//         c.read = true;
-//       }
-//     });
-//   }
+  setLastChats(state,action){
+    state.lastChats = action.payload;
+  },
+
 setIsRead: (state, action) => {
   const chatId = action.payload;
   
-  // עדכון state.chats
   if (state.chats && Array.isArray(state.chats)) {
     const chat = state.chats.find(c => c && c.chatId === chatId);
     if (chat) {
       chat.read = true;
     }
-    // עדכון מספר ההודעות שלא נקראו
     state.unreadCount = state.chats.filter(c => c && c.read === false).length;
   }
-  
   state.getChats = state.getChats.map(c => {
     if (c && c.chatId === action.payload) {
-      return { ...c, read: true }; // החזרת עותק מעודכן של האובייקט
+      return { ...c, read: true }; 
     }
-    return c; // החזרת האובייקט המקורי
+    return c; 
   });
-  // עדכון state.sendChats
   if (state.sendChats && Array.isArray(state.sendChats)) {
     state.sendChats = state.sendChats.map(c => {
       if (c && c.chatId === action.payload) {
@@ -164,4 +148,4 @@ builder.addCase(addChatThunk.rejected, (state, action) => {
 })
 }
 });
-export const {setApplicationId,setTo,myChats,setGetAndSend,setIsRead} = chatSlice.actions;
+export const {setApplicationId,setTo,myChats,setGetAndSend,setIsRead,setLastChats} = chatSlice.actions;

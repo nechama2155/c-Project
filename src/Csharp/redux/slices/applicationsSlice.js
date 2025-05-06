@@ -12,6 +12,7 @@ import { fullAssessorManagerThunk } from "./get/fullAssessorManagerThunk";
 export const INITIALSTATE = {
 
     applications: [],
+    myApplications: [],
     applicationEdit: {},
     thisAssessor:[],
     sucsses: false,
@@ -110,7 +111,7 @@ builder.addCase(myApplicationsThunk.rejected, (state, action) => {
 // הוספת מקרה שהטנק הסתיים בהצלחה
 builder.addCase(yourApplicationsThunk.fulfilled, (state, action) => {
 
-    state.applications = action.payload;
+    state.myApplications = action.payload;
     state.sucsses = true;
     state.loading = false;
 });

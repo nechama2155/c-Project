@@ -7,6 +7,7 @@ export const INITIALSTATE = {
         userId:"",
         token:null,
     },
+    full:false,
  t:null,
 sucsses: false,
 }
@@ -21,6 +22,10 @@ reducers: {
 } ,
 setType(state,action){
     state.t = action.payload;
+   
+},
+setFull(state,action){
+    state.full = action.payload;
    
 }
 },
@@ -43,4 +48,4 @@ extraReducers: (builder) => {
 }
 
 });
-export const {addUser,setType} = userSlice.actions;
+export const {addUser,setType,setFull} = userSlice.actions;

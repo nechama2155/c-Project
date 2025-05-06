@@ -16,7 +16,7 @@ import { yourApplicationsThunk } from "../redux/slices/get by customer/yourAppli
 import { yourAssessmentsThunk } from "../redux/slices/get by customer/yourAssessmentsThunk";
 import { yourApartmentDetailsThunk } from "../redux/slices/get by customer/yourApartmentsDetailsThunk";
 import { yourAssessorsThunk } from "../redux/slices/get by customer/yourAssessorsThunk";
-import { setApplicationId, setTo } from "../redux/slices/chatSlice";
+import { setApplicationId, setLastChats, setTo } from "../redux/slices/chatSlice";
 
 
 
@@ -25,20 +25,29 @@ import { setApplicationId, setTo } from "../redux/slices/chatSlice";
 export const FullApplications = () => {
     const thisAssessor = useSelector(state => state.assessor.thisAssessor);
     const customerChose = useSelector(state => state.customer.customerChose);
-    // const customersDetails = useSelector(state => state.customer.customers);
     const thisCustomer = useSelector(state => state.customer.thisCustomer);
-    const applicationsDetails = useSelector(state => state.application.applications);
+    const theApplication = useSelector(state => state.application.applications);
+    const myApplication = useSelector(state => state.application.myApplication);
     const assessmentsDetails = useSelector(state => state.assessment.assessments);
     const apartmentsDetails = useSelector(state => state.apartmentDetails.apartmentsDetails);
+    const customersDetails = useSelector(state => state.customer.customers);
     const assessorsDetails = useSelector(state => state.assessor.assessors);
+    const full = useSelector(state => state.user.full);
+    const chatDetails = useSelector(state => state.chat.chats);
     const type = useSelector(state => state.user.t);
     const dispatch = useDispatch();
     const [sent, setSent] = useState(false);
     const [fullDetails, setFullDetails] = useState([]);
     const [finalAssessor, setFinalAssessor] = useState([]);
+    const [applicationsDetails, setApplicationDetails] = useState([...theApplication]);
 
     const navigate = useNavigate();
-
+    const getData = async () => {
+        const res = await dispatch(yourApplicationsThunk(customerChose.customerId));
+        if (res.payload != null) {
+            setApplicationDetails(res.payload);
+        }
+    }
     useEffect(() => {
         if (type === "a") {
             if (thisAssessor.isManager)
@@ -53,50 +62,76 @@ export const FullApplications = () => {
         else if (type === "c") {
             setFinalAssessor(assessorsDetails);
         }
+        if (!full) {
+            //setApplicationDetails(myApplication);
+            getData();
+        }
+        // if (applicationsDetails.length === 0) {
 
-        if (applicationsDetails.length === 0) {
-            if (type === "a" && thisAssessor.isManager)
-                dispatch(applicationThunk());
-            else if (type === "a" && !thisAssessor.isManager)
-                dispatch(myApplicationsThunk(thisAssessor.assessorId));
-            else if (type === "c")
-                dispatch(yourApplicationsThunk(thisCustomer.customerId));
+        //     if(full){
+        //         if(type === "a" && thisAssessor.isManager === true){
+        //             dispatch(applicationThunk());
+        //         }
+        //         if(type === "a" && thisAssessor.isManager === false){
+        //                 dispatch(myApplicationsThunk(thisAssessor.assessorId));
+        //         }
+        //     }
+        //     if(!full){
+        //         dispatch(yourApplicationsThunk(thisCustomer.customerId));
+        //     }
 
-        }
-        if (assessmentsDetails.length === 0) {
-            if (type === "a") {
-                if (thisAssessor.isManager)
-                    dispatch(assessmentThunk());
-                else
-                    dispatch(myAssessmentsThunk(thisAssessor.assessorId));
-            }
-            else if (type === "c")
-                dispatch(yourAssessmentsThunk(thisCustomer.customerId));
-        }
-        if (apartmentsDetails.length === 0) {
-            if (type === "a") {
-                if (thisAssessor.isManager)
-                    dispatch(apartmentDetailsThunk());
-                else
-                    dispatch(myApartmentDetailsThunk(thisAssessor.assessorId));
-            }
-            else if (type === "c")
-                dispatch(yourApartmentDetailsThunk(thisCustomer.customerId));
-        }
-        if (assessorsDetails.length === 0) {
-            if (type === "c")
-                dispatch(yourAssessorsThunk(thisCustomer.customerId));
 
-        }
-        else {
-            if (applicationsDetails.length !== 0) {
-                const s = [];
-                applicationsDetails.forEach(element => {
-                    s.push(element.applicationId);
-                });
-                setFullDetails(s);
-            }
-        }
+        // }
+        // if (assessmentsDetails.length === 0) {
+
+        //     if(full){
+        //         if(type === "a" && thisAssessor.isManager === true){
+        //             dispatch(assessmentThunk());
+        //         }
+        //         if(type === "a" && thisAssessor.isManager === false){
+        //                 dispatch(myAssessmentsThunk(thisAssessor.assessorId));
+        //         }
+        //     }
+        //     if(!full){
+        //         dispatch(yourAssessmentsThunk(thisCustomer.customerId));
+        //     }
+        // }
+        // if (apartmentsDetails.length === 0) {
+        //     // if (type === "a") {
+        //     //     if (thisAssessor.isManager)
+        //     //         dispatch(apartmentDetailsThunk());
+        //     //     else
+        //     //         dispatch(myApartmentDetailsThunk(thisAssessor.assessorId));
+        //     // }
+        //     // else if (type === "c")
+        //     //     dispatch(yourApartmentDetailsThunk(thisCustomer.customerId));
+        //     if(full){
+        //         if(type === "a" && thisAssessor.isManager === true){
+        //             dispatch(apartmentDetailsThunk());
+        //         }
+        //         if(type === "a" && thisAssessor.isManager === false){
+        //                 dispatch(myApartmentDetailsThunk(thisAssessor.assessorId));
+        //         }
+        //     }
+        //     if(!full){
+        //         dispatch(yourApartmentDetailsThunk(thisCustomer.customerId));
+        //     }
+        // }
+        // if (assessorsDetails.length === 0) {
+        //     if (type === "c")
+        //         dispatch(yourAssessorsThunk(thisCustomer.customerId));
+
+        // }
+        // else {
+        //     if (applicationsDetails.length !== 0) {
+        //         const s = [];
+        //         applicationsDetails.forEach(element => {
+        //             s.push(element.applicationId);
+        //         });
+        //         setFullDetails(s);
+        //     }
+        // }
+
     }, [])
     useEffect(() => {
         if (fullDetails.length === 0 && applicationsDetails.length !== 0 && apartmentsDetails.length !== 0 && assessmentsDetails.length !== 0 && finalAssessor.length !== 0) {
@@ -107,14 +142,29 @@ export const FullApplications = () => {
             setFullDetails(s);
         }
     }, [applicationsDetails, assessmentsDetails, apartmentsDetails, finalAssessor])
+
     const assess = (a, applicationId) => {
         const aa = applicationsDetails.find(c => c.assessorId === a.assessorId);
         if (aa.applicationId === applicationId)
             return true;
     }
+    const cust = (y, applicationId) => {
+        const cc = apartmentsDetails.find(c => c.customerId === y);
+        if (cc.apartmentId === applicationId)
+            return true;
+    }
+    const chatMe = (element) => {
+        let arr = [];
+        chatDetails.forEach(e => {
+            if (element === e.applicationId) {
+                arr.push(e);
+            }
+        });
+        dispatch(setLastChats(arr));
+    }
     return <div>
         {/* customer table */}
-        {type === "a" && <table>
+        {type === "a" && !full && <table>
             <thead>
                 {/* <tr>
                     <th>id</th>
@@ -150,8 +200,52 @@ export const FullApplications = () => {
                 return <>
                     <div style={{ border: "solid 2px gray", width: "100%" }}>
                         <div >
+                            {type === "a" && full && <table>
+                                <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>firstName</th>
+                                        <th>lastName</th>
+                                        <th>city</th>
+                                        <th>address</th>
+                                        <th>phone</th>
+                                        <th>email</th>
+                                        {!thisAssessor.isManager && <th>chat</th>}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* <tr>
+                    <td>customerChose.customerId}</td>
+                    <td>firstName: {customerChose.customerFirstName}</td>
+                    <td>lastName: {customerChose.customerLastName}</td>
+                    <td>city: {customerChose.customerCity}</td>
+                    <td>address: {customerChose.customerAddress}</td>
+                    <td>phone: {customerChose.customerPhone}</td>
+                    <td>email: {customerChose.customerEmail}</td>
+
+                </tr> */}
+                                    {customersDetails.map(d => {
+
+                                        if (cust(d.customerId, element)) {
+                                            return <tr key={d.customerId}>
+
+                                                <td>{d.customerId}</td>
+                                                <td>firstName: {d.customerFirstName}</td>
+                                                <td>lastName: {d.customerLastName}</td>
+                                                <td>city: {d.customerCity}</td>
+                                                <td>address: {d.customerAddress}</td>
+                                                <td>phone: {d.customerPhone}</td>
+                                                <td>email: {d.customerEmail}</td>
+
+                                            </tr>
+                                        }
+                                    }
+                                    )}
+
+                                </tbody>
+                            </table>}
                             {/* assessor table */}
-                            <table>
+                            {(type === "c" || (type === "a" && thisAssessor.isManager === true)) && <table>
                                 <thead>
                                     <tr><th>assessor</th></tr>
                                     <tr>
@@ -181,7 +275,7 @@ export const FullApplications = () => {
                                     )}
 
                                 </tbody>
-                            </table>
+                            </table>}
                             {/* application table */}
 
                             <table>
@@ -294,7 +388,7 @@ export const FullApplications = () => {
                                 {!sent && <Button variant="text" onClick={() => { setSent(true) }}><MailOutlineOutlinedIcon /></Button>}
                                 {sent && <>
                                     <Button onClick={() => { dispatch(setApplicationId(element)); dispatch(setTo(customerChose.customerFirstName + " " + customerChose.customerLastName)); navigate('newChat') }}><BookmarkAddOutlinedIcon />new chat</Button><br />
-                                    <Button onClick={() => navigate('/home/lastChats')}><BookmarkAddedOutlinedIcon />last chats</Button>
+                                    <Button onClick={() => { chatMe(element); navigate('/home/lastChats') }}><BookmarkAddedOutlinedIcon />last chats</Button>
                                 </>
                                 }
                             </>}

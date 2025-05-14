@@ -695,7 +695,7 @@ import {
   Typography, AppBar, Toolbar, IconButton, Badge, Avatar,
   Container, Paper, ListItemIcon, ListItemText, Tooltip
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import * as React from 'react';
@@ -728,6 +728,11 @@ import { fullAssessorManagerThunk } from "../redux/slices/get/fullAssessorManage
 import { fullCustomerThunk } from "../redux/slices/get/fullCustomerThunk";
 import { setFull } from "../redux/slices/userSlice";
 
+// יבוא של קומפוננטות אחרות שאתה משתמש בהן ב-Home...
+import ScreenSaver from './screenSaver';
+
+// זמן חוסר פעילות בטרם הפעלת שומר המסך (2 דקות)
+const INACTIVITY_TIMEOUT = 30000;
 export const Home = () => {
   const type = useSelector(state => state.user.t);
   const thisAssessor = useSelector(state => state.assessor.thisAssessor);
@@ -745,6 +750,65 @@ export const Home = () => {
   const [userDetailsOpen, setUserDetailsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  ///////////////////////////////////
+
+  const [showScreenSaver, setShowScreenSaver] = useState(false);
+  const inactivityTimerRef = useRef(null);
+
+  // פונקציה לאיפוס הטיימר
+  const resetInactivityTimer = () => {
+    // מנקה את הטיימר הקודם אם קיים
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    
+    // מגדיר טיימר חדש
+    inactivityTimerRef.current = setTimeout(() => {
+      setShowScreenSaver(true);
+    }, INACTIVITY_TIMEOUT);
+  };
+
+  // פונקציה לטיפול בפעילות משתמש
+  const handleUserActivity = () => {
+    // אם שומר המסך מוצג, סוגר אותו
+    if (showScreenSaver) {
+      setShowScreenSaver(false);
+    }
+    
+    // מאפס את הטיימר בכל פעילות
+    resetInactivityTimer();
+  };
+
+  useEffect(() => {
+    // מגדיר את הטיימר הראשוני
+    resetInactivityTimer();
+    
+    // מוסיף מאזינים לפעילות משתמש
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('mousedown', handleUserActivity);
+    window.addEventListener('keydown', handleUserActivity);
+    window.addEventListener('touchstart', handleUserActivity);
+    window.addEventListener('scroll', handleUserActivity);
+    
+    // ניקוי בעת פירוק הקומפוננטה
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+      
+      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener('mousedown', handleUserActivity);
+      window.removeEventListener('keydown', handleUserActivity);
+      window.removeEventListener('touchstart', handleUserActivity);
+      window.removeEventListener('scroll', handleUserActivity);
+    };
+  }, []);
+
+  // פונקציה לסגירת שומר המסך
+  const handleCloseScreenSaver = () => {
+    setShowScreenSaver(false);
+    resetInactivityTimer();
+  };
   useEffect(() => {
     if (type === 'a') {
       setDetails(thisAssessor);
@@ -921,6 +985,9 @@ useEffect(() => {
   };
 
   return (
+    <>
+      {/* שומר המסך */}
+      {showScreenSaver && <ScreenSaver onClose={handleCloseScreenSaver} />}
     <Box className="home-container" sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Header - Fixed position */}
       <AppBar position="fixed" elevation={0} sx={{ bgcolor: 'white', color: '#2c3e50', zIndex: 1200 }}>
@@ -1167,5 +1234,10 @@ useEffect(() => {
         </Box>
       </Drawer>
     </Box>
+    </>
   );
+  
 };
+
+export default Home;
+

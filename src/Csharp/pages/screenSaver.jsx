@@ -127,6 +127,7 @@ const ScreenSaver = ({ onClose }) => {
             height: 'auto',
             // הסרת אפקט הצל מהלוגו
             filter: 'none'
+
           }}
         />
       </Box>

@@ -1,59 +1,225 @@
-import { useState ,useEffect, useRef} from "react";
+
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField } from "@mui/material";
+import { 
+  Box, 
+  Button, 
+  TextField, 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions,
+  Grid,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+  IconButton
+} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 import { editAssessmentThunk } from "../../redux/slices/edit/editAssessmentThunk";
 import { setIsMy } from "../../redux/slices/assessmentSlice";
 
-
 export const EditAssessment = () => {
-    const assessment = useSelector(state => state.assessment.assessmentsEdit);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const refdialog = useRef();
-    const [details, setDetails] = useState({block:"",plot:"",subPlot:"",constructionYear:"",acquisionPrice:"",assessmentGoal:"",legalState:"",buildingPermit:"",irregularitiesBuilding:""});
-  
-    useEffect(() => { 
+  const assessment = useSelector(state => state.assessment.assessmentsEdit);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(true);
+  const [details, setDetails] = useState({
+    block: "",
+    plot: "",
+    subPlot: "",
+    constructionYear: "",
+    acquisionPrice: "",
+    assessmentGoal: "",
+    legalState: "",
+    buildingPermit: false,
+    irregularitiesBuilding: false
+  });
+
+  useEffect(() => {
+    if (assessment) {
       setDetails(assessment);
-        refdialog.current.showModal();
-       
-      }, [])
+    }
+  }, [assessment]);
 
-    
-    return <div>
- <dialog ref={refdialog}>
- <Button onClick={()=>{refdialog.current.close()}}>✖</Button>
+  const handleClose = () => {
+    setOpen(false);
+    navigate('/home/assessments');
+  };
 
-        <div>
-        <Box>
-       <TextField  id="input-with-icon-adornment" label="Block" variant="standard"  value={details?.block} onChange={(e) => setDetails({ ...details, block: e.target.value })}/>
-      <TextField  label="Plot"variant="standard"  value={details?.plot} onChange={(e) => setDetails({ ...details, plot: e.target.value  })}/>
-      <TextField  label="SubPlot"  variant="standard"  value={details?.subPlot} onChange={(e) => setDetails({ ...details, subPlot: e.target.value })} />
-      <TextField  label="ConstructionYear" variant="standard"  value={details?.constructionYear} onChange={(e) => setDetails({ ...details, constructionYear: e.target.value })}/>
-      <TextField  label="AcquisionPrice" variant="standard"  value={details?.acquisionPrice} onChange={(e) => setDetails({ ...details, acquisionPrice: e.target.value })}/>
-      <TextField  label="AssessmentGoal" variant="standard" type="email" value={details?.assessmentGoal} onChange={(e) => setDetails({ ...details, assessmentGoal: e.target.value })} />
-      <TextField  label="LegalState" variant="standard" type="number"  value={details?.legalState} onChange={(e) => setDetails({ ...details, legalState:parseInt( e.target.value) })}/>
-      <TextField  label="BuildingPermit" variant="standard" type="checkbox" size="lg" defaultChecked={details.buildingPermit}  onChange={(e) => setDetails({ ...details, buildingPermit: e.target.checked })}/>
-      <TextField  label="IrregularitiesBuilding" variant="standard" type="checkbox" size="lg" defaultChecked={details.irregularitiesBuilding}  onChange={(e) => setDetails({ ...details, irregularitiesBuilding: e.target.checked })}/>
-    </Box>
-{/* 
-    <th>AssessmentId</th>
-                    <th>Block</th>
-                    <th>Plot</th>
-                    <th>SubPlot</th>
-                    <th>ConstructionYear</th>
-                    <th>AcquisionPrice</th>
-                    <th>AssessmentGoal</th>
-                    <th>LegalState</th>
-                    <th>BuildingPermit</th>
-                    <th>IrregularitiesBuilding</th> */}
-        </div>
-        {/* <Button></Button> */}
-        {/* <Button variant="text">Text</Button> */}
-        <Button variant="text" onClick={() => {dispatch(setIsMy(details));dispatch(editAssessmentThunk({...details,assessmentId:assessment.assessmentId})); navigate('/home/assessments') }}>save</Button>
-        </dialog>
-    </div>
-}
+  const handleSave = () => {
+    dispatch(setIsMy(details));
+    dispatch(editAssessmentThunk({
+      ...details,
+      assessmentId: assessment.assessmentId
+    }));
+    setOpen(false);
+    navigate('/home/assessments');
+  };
 
+  return (
+    <Dialog 
+      open={open} 
+      onClose={handleClose}
+      fullWidth
+      maxWidth="md"
+    >
+      <DialogTitle sx={{ m: 0, p: 2, bgcolor: '#f5f5f5' }}>
+        <Typography variant="h6" component="div">
+          Edit Assessment
+        </Typography>
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent dividers>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="block"
+              label="Block"
+              variant="outlined"
+              value={details?.block || ''}
+              onChange={(e) => setDetails({ ...details, block: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="plot"
+              label="Plot"
+              variant="outlined"
+              value={details?.plot || ''}
+              onChange={(e) => setDetails({ ...details, plot: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="subPlot"
+              label="Sub Plot"
+              variant="outlined"
+              value={details?.subPlot || ''}
+              onChange={(e) => setDetails({ ...details, subPlot: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="constructionYear"
+              label="Construction Year"
+              variant="outlined"
+              type="number"
+              value={details?.constructionYear || ''}
+              onChange={(e) => setDetails({ ...details, constructionYear: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="acquisionPrice"
+              label="Acquision Price"
+              variant="outlined"
+              type="number"
+              value={details?.acquisionPrice || ''}
+              onChange={(e) => setDetails({ ...details, acquisionPrice: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="assessmentGoal"
+              label="Assessment Goal"
+              variant="outlined"
+              value={details?.assessmentGoal || ''}
+              onChange={(e) => setDetails({ ...details, assessmentGoal: e.target.value })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              id="legalState"
+              label="Legal State"
+              variant="outlined"
+              type="number"
+              value={details?.legalState || ''}
+              onChange={(e) => setDetails({ ...details, legalState: parseInt(e.target.value) || 0 })}
+              margin="normal"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={details?.buildingPermit || false}
+                  onChange={(e) => setDetails({ ...details, buildingPermit: e.target.checked })}
+                  name="buildingPermit"
+                />
+              }
+              label="Building Permit"
+            />
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={details?.irregularitiesBuilding || false}
+                  onChange={(e) => setDetails({ ...details, irregularitiesBuilding: e.target.checked })}
+                  name="irregularitiesBuilding"
+                />
+              }
+              label="Irregularities Building"
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      
+      <DialogActions sx={{ padding: 2, justifyContent: 'space-between' }}>
+        <Button 
+          variant="outlined" 
+          onClick={handleClose}
+          startIcon={<CloseIcon />}
+        >
+          Cancel
+        </Button>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={handleSave}
+          startIcon={<SaveIcon />}
+        >
+          Save Changes
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 

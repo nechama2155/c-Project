@@ -13,7 +13,6 @@ import { AddCustomer } from "./Customer/addCustomer"
 import { EditCustomer } from "./Customer/editCustomer"
 import { NewApplication } from "./newApplication"
 import { About } from "./about"
-import { LastTreatment } from "./lastTreatments"
 import { MyDetails } from "./myDetails"
 import { LastChats } from "./lastChats"
 import { NewChat } from "./newChat"
@@ -52,7 +51,6 @@ export const Routing = () => {
                     <Route path={'editAssessment'} element={<EditAssessment />} />
                 </Route>
                 <Route path={'applications'} element={<Applications />} />
-                <Route path={'lastTreatment'} element={<LastTreatment />} />
                 <Route path={'newApplication'} element={<NewApplication />} />
                 <Route path={'apartmentDetails'} element={<ApartmentDetails />} />
                 <Route path={'folders'} element={<Folders />} />

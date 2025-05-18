@@ -1,0 +1,515 @@
+.assessment-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    padding: 0;
+    padding-bottom: 70px;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.assessment-content {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    position: relative; /* חשוב עבור מיקום אלמנטים בתוכו */
+}
+
+/* סגנונות טבלת הגריד - מבנה חדש */
+.grid-table {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    overflow: hidden;
+    min-width: 1000px; /* רוחב מינימלי למניעת דחיסה מוגזמת */
+    display: flex;
+    flex-direction: column;
+}
+
+/* מיכל נפרד לכותרת */
+.grid-header-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* מיכל נפרד לתוכן שניתן לגלול */
+.grid-body-container {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px); /* גובה מקסימלי עם מרווח לכפתורים בתחתית */
+    width: 100%;
+}
+
+.grid-header, .grid-row {
+    display: grid;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+}
+
+/* עמודות גריד ברירת מחדל */
+.grid-header, .grid-row {
+    grid-template-columns: 
+        minmax(60px, 7%)
+        minmax(70px, 8%)
+        minmax(70px, 8%)
+        minmax(70px, 8%)
+        minmax(70px, 9%)
+        minmax(80px, 10%)
+        minmax(90px, 12%)
+        minmax(80px, 12%)
+        minmax(80px, 12%)
+        minmax(90px, 14%);
+    column-gap: 8px; /* מרווח קבוע בין העמודות */
+}
+
+.grid-header {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    height: 54px;
+}
+
+.grid-row {
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-height: 52px;
+    height: auto;
+}
+
+.grid-cell {
+    padding: 14px 8px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    min-width: 0; /* קריטי עבור קיטום טקסט */
+}
+
+.grid-header .grid-cell {
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 600;
+    font-size: 1.05rem;
+    white-space: nowrap; /* מונע שבירת שורות בכותרות */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selected-row {
+    background-color: rgba(25, 118, 210, 0.12) !important;
+}
+
+/* סגנונות ספציפיים לרכיב Assessors - הגדלת עמודת ID והזזת שאר העמודות */
+.Assessors .grid-header, .Assessors .grid-row {
+    grid-template-columns: 
+        minmax(100px, 8%) /* ID - הרחבה נוספת של העמודה */
+        minmax(100px, 9%) /* שם פרטי */
+        minmax(100px, 9%) /* שם משפחה */
+        minmax(90px, 8%) /* עיר */
+        minmax(140px, 15%) /* כתובת */
+        minmax(100px, 10%) /* טלפון */
+        minmax(160px, 17%) /* אימייל */
+        minmax(70px, 8%) /* ותק */
+        minmax(70px, 8%) /* זמינות */
+        minmax(70px, 8%); /* מנהל */
+    column-gap: 12px; /* מרווח מוגדל בין העמודות */
+}
+
+/* תצוגת לקוח עם פחות עמודות */
+.Assessors.customer-view .grid-header, .Assessors.customer-view .grid-row {
+    grid-template-columns: 
+        minmax(130px, 16%) /* שם פרטי */
+        minmax(130px, 16%) /* שם משפחה */
+        minmax(100px, 14%) /* עיר */
+        minmax(160px, 22%) /* כתובת */
+        minmax(110px, 14%) /* טלפון */
+        minmax(180px, 18%); /* אימייל */
+    column-gap: 12px;
+}
+
+/* וידוא שהתאים לא חופפים על ידי שליטה בגלישת טקסט */
+.Assessors .grid-cell {
+    white-space: normal; /* מאפשר עטיפת טקסט */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 14px 10px; /* ריפוד עקבי */
+}
+
+/* סגנון מיוחד לתא של תעודת זהות - מבטיח הצגה בשורה אחת ובשלמות */
+.Assessors .grid-row .grid-cell:first-child,
+.Assessors .grid-header .grid-cell:first-child {
+    white-space: nowrap; /* מונע שבירת שורה בתעודת זהות */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px; /* רוחב מינימלי מוגדל שיכיל תעודת זהות מלאה */
+    padding-right: 4px; /* פחות ריפוד בצד ימין */
+}
+
+/* Styles for Applications component */
+.Applications .grid-header, .Applications .grid-row {
+    grid-template-columns: 
+        minmax(120px, 20%) /* Application ID */
+        minmax(100px, 20%) /* Assessor ID */
+        minmax(140px, 20%) /* Application Date */
+        minmax(160px, 20%) /* Last Application Date */
+        minmax(140px, 20%); /* Application Status */
+    column-gap: 12px; /* Gap between columns */
+}
+
+/* Special style for ID cells in Applications - ensures display in one line */
+.Applications .grid-row .grid-cell:nth-child(1),
+.Applications .grid-row .grid-cell:nth-child(2),
+.Applications .grid-header .grid-cell:nth-child(1),
+.Applications .grid-header .grid-cell:nth-child(2) {
+    white-space: nowrap; /* Prevents line breaks in IDs */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 100px; /* Minimum width to contain full ID */
+}
+
+/* כפתורים קבועים בתחתית */
+.assessment-buttons-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    background-color: white;
+    padding: 16px;
+    border-top: 1px solid #eaeaea;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.assessment-buttons-fixed button {
+    padding: 10px 18px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: none;
+    transition: all 0.2s;
+    min-width: 140px;
+    font-size: 1rem;
+}
+
+.assessment-buttons-fixed button:first-child {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+}
+
+.assessment-buttons-fixed button:first-child:hover:not(:disabled) {
+    background-color: #1565c0;
+}
+
+.assessment-buttons-fixed button:last-child {
+    color: #f50057;
+    border: 1px solid #f50057;
+    background-color: transparent;
+}
+
+.assessment-buttons-fixed button:last-child:hover:not(:disabled) {
+    background-color: rgba(245, 0, 87, 0.04);
+}
+
+.assessment-buttons-fixed button:disabled {
+    color: rgba(0, 0, 0, 0.26) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    background-color: rgba(0, 0, 0, 0.12) !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* התאמות רספונסיביות */
+@media screen and (max-width: 1200px) {
+    .grid-cell {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+    
+    .grid-header .grid-cell {
+        font-size: 0.95rem;
+    }
+    
+    .grid-row {
+        min-height: 46px;
+    }
+    
+    .grid-header {
+        height: 46px;
+    }
+    
+    .assessment-buttons-fixed button {
+        min-width: 120px;
+        padding: 8px 14px;
+        font-size: 0.95rem;
+    }
+    
+    /* התאמה ספציפית לתעודת זהות במסכים קטנים */
+    .Assessors .grid-row .grid-cell:first-child,
+    .Assessors .grid-header .grid-cell:first-child {
+        min-width: 90px; /* גם במסכים קטנים, שומרים על רוחב מספיק */
+    }
+    
+    /* התאמת גובה מקסימלי למיכל התוכן במסכים קטנים */
+    .grid-body-container {
+        max-height: calc(100vh - 180px);
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .grid-cell {
+        padding: 16px 12px;
+        font-size: 1.1rem;
+    }
+    
+    .grid-header .grid-cell {
+        font-size: 1.15rem;
+    }
+    
+    .grid-row {
+        min-height: 58px;
+    }
+    
+    .grid-header {
+        height: 58px;
+    }
+    
+    .assessment-buttons-fixed button {
+        min-width: 160px;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+    }
+    
+    /* התאמה ספציפית לתעודת זהות במסכים גדולים */
+    .Assessors .grid-row .grid-cell:first-child,
+    .Assessors .grid-header .grid-cell:first-child {
+        min-width: 110px; /* רוחב גדול יותר במסכים גדולים */
+    }
+    
+    /* התאמת גובה מקסימלי למיכל התוכן במסכים גדולים */
+    .grid-body-container {
+        max-height: calc(100vh - 220px);
+    }
+}
+
+/* Responsive adjustments specific to Applications component */
+@media screen and (max-width: 1200px) {
+    .Applications .grid-header, .Applications .grid-row {
+        grid-template-columns: 
+            minmax(100px, 20%)
+            minmax(90px, 20%)
+            minmax(120px, 20%)
+            minmax(140px, 20%)
+            minmax(120px, 20%);
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .Applications .grid-header, .Applications .grid-row {
+        grid-template-columns: 
+            minmax(130px, 20%)
+            minmax(110px, 20%)
+            minmax(150px, 20%)
+            minmax(170px, 20%)
+            minmax(150px, 20%);
+    }
+}
+/* Styles for Customers component */
+.Customers .grid-header, .Customers .grid-row {
+    grid-template-columns: 
+        minmax(90px, 9%) /* ID - הרחבה משמעותית */
+        minmax(100px, 11%) /* First Name - הקטנה קלה */
+        minmax(100px, 11%) /* Last Name - הקטנה קלה */
+        minmax(90px, 9%) /* City - הקטנה קלה */
+        minmax(140px, 19%) /* Address - הקטנה קלה */
+        minmax(110px, 15%) /* Phone */
+        minmax(160px, 20%) /* Email */
+        minmax(120px, 6%); /* Actions */
+    column-gap: 8px; /* מרווח קבוע בין העמודות */
+}
+
+/* When manager view (no actions column) */
+.Customers.manager-view .grid-header, .Customers.manager-view .grid-row {
+    grid-template-columns: 
+        minmax(90px, 10%) /* ID - הרחבה משמעותית */
+        minmax(110px, 13%) /* First Name - הקטנה קלה */
+        minmax(110px, 13%) /* Last Name - הקטנה קלה */
+        minmax(100px, 11%) /* City - הקטנה קלה */
+        minmax(150px, 21%) /* Address - הקטנה קלה */
+        minmax(120px, 14%) /* Phone */
+        minmax(180px, 18%); /* Email */
+}
+
+/* Special styling for action cell */
+.Customers .action-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+}
+
+/* Ensure buttons in action cells are properly sized */
+.Customers .action-cell .MuiButton-root {
+    min-height: 32px;
+    padding: 4px 10px;
+    font-size: 0.85rem;
+}
+
+/* Special style for ID cells in Customers - ensures display in one line */
+.Customers .grid-row .grid-cell:first-child,
+.Customers .grid-header .grid-cell:first-child {
+    white-space: nowrap; /* Prevents line breaks in IDs */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 90px; /* הגדלת הרוחב המינימלי */
+    padding-right: 8px; /* מרווח נוסף בצד ימין */
+}
+
+/* Responsive adjustments for Customers component */
+@media screen and (max-width: 1200px) {
+    .Customers .grid-header, .Customers .grid-row {
+        grid-template-columns: 
+            minmax(80px, 9%)
+            minmax(90px, 11%)
+            minmax(90px, 11%)
+            minmax(80px, 9%)
+            minmax(120px, 19%)
+            minmax(100px, 15%)
+            minmax(140px, 20%)
+            minmax(100px, 6%);
+    }
+    
+    .Customers.manager-view .grid-header, .Customers.manager-view .grid-row {
+        grid-template-columns: 
+            minmax(80px, 10%)
+            minmax(100px, 13%)
+            minmax(100px, 13%)
+            minmax(90px, 11%)
+            minmax(130px, 21%)
+            minmax(110px, 14%)
+            minmax(160px, 18%);
+    }
+    
+    /* Smaller text for action buttons on smaller screens */
+    .Customers .action-cell .MuiButton-root {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .Customers .grid-header, .Customers .grid-row {
+        grid-template-columns: 
+            minmax(100px, 9%)
+            minmax(120px, 11%)
+            minmax(120px, 11%)
+            minmax(100px, 9%)
+            minmax(160px, 19%)
+            minmax(120px, 15%)
+            minmax(180px, 20%)
+            minmax(140px, 6%);
+    }
+    
+    .Customers.manager-view .grid-header, .Customers.manager-view .grid-row {
+        grid-template-columns: 
+            minmax(100px, 10%)
+            minmax(130px, 13%)
+            minmax(130px, 13%)
+            minmax(110px, 11%)
+            minmax(170px, 21%)
+            minmax(130px, 14%)
+            minmax(200px, 18%);
+    }
+    
+    /* Larger text for action buttons on larger screens */
+    .Customers .action-cell .MuiButton-root {
+        font-size: 0.95rem;
+        padding: 6px 12px;
+    }
+}
+/* Styles for ApartmentDetails component */
+.ApartmentDetails .grid-header, .ApartmentDetails .grid-row {
+    grid-template-columns: 
+        minmax(60px, 6%) /* ID */
+        minmax(100px, 10%) /* Customer ID */
+        minmax(90px, 10%) /* City */
+        minmax(140px, 20%) /* Address - הקטנה קלה */
+        minmax(70px, 8%) /* Size - הקטנה קלה */
+        minmax(100px, 13%) /* Air Directions - הקטנה קלה */
+        minmax(100px, 16%) /* Directions - הקטנה קלה */
+        minmax(60px, 7%) /* Floor - הקטנה קלה */
+        minmax(80px, 10%); /* Elevator - הגדלה משמעותית */
+    column-gap: 8px; /* מרווח קבוע בין העמודות */
+}
+
+/* Special style for ID cells in ApartmentDetails - ensures display in one line */
+.ApartmentDetails .grid-row .grid-cell:nth-child(1),
+.ApartmentDetails .grid-row .grid-cell:nth-child(2),
+.ApartmentDetails .grid-header .grid-cell:nth-child(1),
+.ApartmentDetails .grid-header .grid-cell:nth-child(2) {
+    white-space: nowrap; /* Prevents line breaks in IDs */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 60px; /* Minimum width to contain full ID */
+}
+
+/* Style for empty state message */
+.no-data-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments for ApartmentDetails component */
+@media screen and (max-width: 1200px) {
+    .ApartmentDetails .grid-header, .ApartmentDetails .grid-row {
+        grid-template-columns: 
+            minmax(50px, 6%)
+            minmax(90px, 10%)
+            minmax(80px, 10%)
+            minmax(120px, 20%)
+            minmax(60px, 8%)
+            minmax(90px, 13%)
+            minmax(90px, 16%)
+            minmax(50px, 7%)
+            minmax(70px, 10%); /* Elevator - הגדלה משמעותית */
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .ApartmentDetails .grid-header, .ApartmentDetails .grid-row {
+        grid-template-columns: 
+            minmax(70px, 6%)
+            minmax(110px, 10%)
+            minmax(100px, 10%)
+            minmax(160px, 20%)
+            minmax(80px, 8%)
+            minmax(120px, 13%)
+            minmax(120px, 16%)
+            minmax(70px, 7%)
+            minmax(90px, 10%); /* Elevator - הגדלה משמעותית */
+    }
+}

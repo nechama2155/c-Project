@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { editAssessorThunk } from "../../redux/slices/edit/editAssessorThunk";
 import { Box, Button, TextField } from "@mui/material";
 
-
 export const EditAssessor = () => {
     const assessor = useSelector(state => state.assessor.assessorEdit);
     const navigate = useNavigate();
@@ -38,6 +37,7 @@ export const EditAssessor = () => {
         </dialog>
     </div>
 }
+
 
 
 

@@ -1,5 +1,4 @@
-
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Box, Typography, Grid, Card, CardContent,
   CardMedia, Button, Divider, Chip, Container,
@@ -13,7 +12,6 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import SecurityIcon from '@mui/icons-material/Security';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SchoolIcon from '@mui/icons-material/School';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -23,25 +21,11 @@ export const About = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const scrollToTop = () => {
-    topRef.current?.scrollIntoView({
-      top: 100,
-      behavior: 'smooth'
-    });
-  };
-  // const scrollToTop = () => {
-
-  //   topRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // };
-useEffect(() => {
-  // גלילה לראש הדף כשהקומפוננטה נטענת
-
-  // topRef.current?.scrollIntoView({
-  //   top: 80,
-  //   behavior: 'smooth'
-  // });
-  window.scrollTo(0, 0);
-}, []);
+  useEffect(() => {
+    // גלילה לראש הדף כשהקומפוננטה נטענת
+    window.scrollTo(0, 0);
+  }, []);
+  
   const features = [
     {
       title: "Professional Appraisals",
@@ -85,7 +69,6 @@ useEffect(() => {
   ];
 
   return (
-    // sx={{ p: { xs: 2, md: 4 }, position: 'relative' }}
     <Box sx={{ p: { xs: 2, md: 4 }, position: 'relative' }} ref={topRef}>
       {/* Hero section */}
       <Fade in={true} timeout={1000}>
@@ -120,19 +103,20 @@ useEffect(() => {
             expertise with cutting-edge technology to deliver reliable valuations you can trust.
           </Typography>
           
-          <Box
-            component="img"
-            src="/hero-image.jpg"
-            alt="Property Appraisal"
-            sx={{
-              width: '100%',
-              height: 400,
-              objectFit: 'cover',
-              borderRadius: 2,
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-              mb: 4
-            }}
-          />
+<Box
+  component="img"
+  src="/logo.png"
+  alt="Property Appraisal"
+  sx={{
+    width: '20%',
+    height: 220,
+    objectFit: 'cover',
+    borderRadius: 2,
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', // Remove this line
+    mb: 4
+  }}
+/>
+
         </Box>
       </Fade>
 
@@ -243,62 +227,6 @@ useEffect(() => {
       </Fade>
 
       <Divider sx={{ my: 6 }} />
-
-      {/* Our Expertise section
-      <Fade in={true} timeout={1600}>
-        <Box sx={{ mb: 8 }}>
-          <Typography
-            variant="h5"
-            component="h2"
-            fontWeight="600"
-            color="#2c3e50"
-            sx={{ mb: 4 }}
-          >
-            What Sets Us Apart
-          </Typography>
-
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={6}>
-              <Box
-                component="img"
-                src="/expertise.jpg"
-                alt="Our Expertise"
-                sx={{
-                  width: '100%',
-                  height: { xs: 250, md: '100%' },
-                  objectFit: 'cover',
-                  borderRadius: 2,
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="body1" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-                With over 18 years in the industry, our appraisal service has established a reputation
-                for excellence and reliability. Our team's unique combination of local market knowledge,
-                technical expertise, and commitment to client satisfaction makes us the preferred choice
-                for property valuations.
-              </Typography>
-              
-              <List>
-                {expertise.map((item, index) => (
-                  <ListItem key={index} sx={{ py: 1 }}>
-                    <ListItemIcon>
-                      <StarIcon sx={{ color: '#4facfe' }} />
-                    </ListItemIcon>
-                    <ListItemText primary={item} />
-                  </ListItem>
-                ))}
-              </List>
-              
-              <Typography variant="body1" sx={{ mt: 2, fontStyle: 'italic', color: '#7f8c8d' }}>
-                "Our commitment to accuracy and thoroughness has earned us a 98% client satisfaction rate
-                and numerous industry recognitions."
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
-      </Fade> */}
 
       {/* Process section */}
       <Fade in={true} timeout={1800}>
@@ -415,8 +343,6 @@ useEffect(() => {
                   property assessment.
                 </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 3 }}>
-
-
                   <Chip 
                     icon={<SchoolIcon />} 
                     label="Certified Appraisers" 
@@ -466,7 +392,6 @@ useEffect(() => {
             component="h2"
             fontWeight="600"
             color="#2c3e50"
-
             sx={{ mb: 4 }}
           >
             What Our Clients Say
@@ -642,32 +567,7 @@ useEffect(() => {
         </Box>
       </Fade>
 
-      {/* Scroll to top button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={scrollToTop}
-        sx={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          minWidth: 0,
-          width: 50,
-          height: 50,
-          borderRadius: '50%',
-          boxShadow: '0 4px 15px rgba(195, 207, 226, 0.4)',
-          background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-          color: '#2c3e50',
-          '&:hover': {
-            background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 80%)',
-            boxShadow: '0 6px 20px rgba(195, 207, 226, 0.6)',
-            
-          },
-          zIndex: 1000
-        }}
-      >
-        <KeyboardArrowUpIcon />
-      </Button>
+      {/* כפתור הגלילה למעלה הוסר מכאן */}
     </Box>
   );
 };

@@ -88,7 +88,7 @@ const ScreenSaver = ({ onClose }) => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #e6e9ed 0%, #b0bdcf 100%)',
+        background: 'rgb(214, 220, 229)',
         overflow: 'hidden',
         padding: { xs: 2, sm: 4 }
       }}
@@ -119,13 +119,15 @@ const ScreenSaver = ({ onClose }) => {
         }}
       >
         <img
-          src="/logo.png"
+          src="/logo2.png"
           alt="Company Logo"
           style={{ 
             maxWidth: showContent ? '350px' : '450px',
             width: '100%',
             height: 'auto',
-            filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2))'
+            // הסרת אפקט הצל מהלוגו
+            filter: 'none'
+
           }}
         />
       </Box>

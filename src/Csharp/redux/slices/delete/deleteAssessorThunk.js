@@ -10,15 +10,12 @@ export const deleteAssessorThunk = createAsyncThunk(
         const response = await fetch(`https://localhost:7132/Assessor/Delete/${id}`,
         {
             method: 'DELETE',
-           // body: JSON.stringify(id),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
        
         if (response.ok) {
-        //  let data = await response.json();
-        //  console.log(data);
         const data = await response.json();
          return data;
         }

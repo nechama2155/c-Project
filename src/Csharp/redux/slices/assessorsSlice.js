@@ -84,12 +84,10 @@ export const assessorSlice = createSlice({
         });
         builder.addCase(deleteAssessorThunk.fulfilled, (state, action) => {
 
-            // state.assessors.token = action.payload;
             state.assessors = action.payload;
             state.sucsses = true;
             state.loading = false;
         });
-        // הוספת מקרה שהטנק נכשל 
         builder.addCase(deleteAssessorThunk.rejected, (state, action) => {
             state.token = -1;
             state.loading = false;

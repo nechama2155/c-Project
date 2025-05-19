@@ -5,7 +5,7 @@ export const editApplicationThunk = createAsyncThunk(
 
     'editApplicationThunk',
 
-    async ({ details }) => {
+    async (details) => {
         const response = await fetch(`https://localhost:5278/Applications/Update`,{
             method: 'PUT',
             body: JSON.stringify(details),

@@ -55,11 +55,7 @@ export const Applications = () => {
 
             </tbody>
         </table>}
-        {/* <Button  variant="text" onClick={()=>{navigate('/addApplication')}}>add application</Button> */}
-        {selected && <>
-            {/* <Button variant="text" onClick={()=>{dispatch(editApplication(selectedAs));navigate('/editAssessor')}}>edit application</Button> */}
-            {/* <button onClick={()=>{dispatch(deleteApplicationThunk(selectedAs.assessorId));setSelected(false)}}>delete assessor</button> */}
-        </>}
+       
     </div>
 
 }

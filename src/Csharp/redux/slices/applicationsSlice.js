@@ -13,7 +13,6 @@ export const INITIALSTATE = {
 
     applications: [],
     myApplications: [],
-    applicationEdit: {},
     thisAssessor:[],
     sucsses: false,
     code:-1,
@@ -24,9 +23,7 @@ export const applicationSlice = createSlice({
     name: 'application',
     initialState: INITIALSTATE,
     reducers: {
-        editApplication(state, action) {
-            state.applicationEdit = action.payload;
-        }
+       
     },
 
     extraReducers: (builder) => {
@@ -168,7 +165,5 @@ builder.addCase(fullAssessorManagerThunk.pending, (state,action) => {
   })
 }
 
-
-
 });
-export const { editApplication } = applicationSlice.actions;
+export const {} = applicationSlice.actions;

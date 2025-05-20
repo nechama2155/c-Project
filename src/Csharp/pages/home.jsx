@@ -2379,10 +2379,8 @@ import { fullAssessorManagerThunk } from "../redux/slices/get/fullAssessorManage
 import { fullCustomerThunk } from "../redux/slices/get/fullCustomerThunk";
 import { setFull } from "../redux/slices/userSlice";
 
-// יבוא של קומפוננטות אחרות שאתה משתמש בהן ב-Home...
 import ScreenSaver from './screenSaver';
 
-// זמן חוסר פעילות בטרם הפעלת שומר המסך (2 דקות)
 const INACTIVITY_TIMEOUT = 30000;
 export const Home = () => {
   const type = useSelector(state => state.user.t);
@@ -2495,8 +2493,9 @@ export const Home = () => {
 
   // בתוך useEffect שבודק הודעות שלא נקראו
 useEffect(() => {
+
   let numRead = 0;
-  if (getChats && Array.isArray(getChats) && getChats.length > 0) {
+  if (!thisAssessor.isManager && getChats && Array.isArray(getChats) && getChats.length > 0) {
     getChats.forEach(c => {
       if (c && (c.read === false || c.read === undefined)) numRead++;
     });

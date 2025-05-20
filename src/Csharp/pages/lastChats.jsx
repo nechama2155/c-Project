@@ -28,6 +28,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import SendIcon from '@mui/icons-material/Send';
 import ReceiveIcon from '@mui/icons-material/MoveToInbox';
+import { type } from '@testing-library/user-event/dist/type';
 
 export const LastChats = () => {
     const myChats = useSelector(state => state.chat.lastChats);
@@ -41,7 +42,12 @@ export const LastChats = () => {
     const [sortBy, setSortBy] = useState('none');
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredChats, setFilteredChats] = useState([]);
-
+    // const assessments = useSelector(state => state.assessment.assessments);
+    const customers = useSelector(state => state.customer.customers);
+    const assessors = useSelector(state => state.assessor.assessors);
+    const apartmentDetailsData = useSelector(state => state.apartmentDetails.apartmentsDetails);
+    const thisAssessor = useSelector(state => state.assessor.thisAssessor);
+    const [localReadChats, setLocalReadChats] = useState({});
     useEffect(() => {
         // Scroll to top when component mounts
         window.scrollTo(0, 0);
@@ -70,6 +76,12 @@ export const LastChats = () => {
                 read: true
             };
             dispatch(editChatThunk(updatedChat));
+            
+            // הוסף את הצ'אט לרשימת הצ'אטים שנקראו מקומית
+            setLocalReadChats(prev => ({
+                ...prev,
+                [chat.chatId]: true
+            }));
         }
     };
 
@@ -95,9 +107,70 @@ export const LastChats = () => {
     };
 
     // Function to get user details by userId
-    const getUserDetails = (userId) => {
-        const user = users.find(user => user.id === userId);
-        return user || { id: userId, name: 'Unknown User' };
+    // const getUserDetails = (userId) => {
+    //     const user = users.find(user => user.id === userId);
+    //     return user || { id: userId, name: 'Unknown User' };
+    // };
+    // פונקציה לקבלת פרטי משתמש לפי היררכיית הנתונים 
+    const getDetailedUserInfo = (chat) => {
+        // בדיקה אם מדובר בלקוח או בשמאי
+        const isCustomer = chat.from === 'c';
+        const isAssessor = chat.from === 'a';
+
+        // מציאת הפנייה הרלוונטית
+        const application = applications.find(app => app.applicationId === chat.applicationId);
+
+        if (!application) {
+            return { name: 'Unknown' };
+        }
+
+        // אם השולח הוא לקוח
+        if (isCustomer) {
+            // מציאת פרטי הדירה לפי מזהה הפנייה
+            // שימוש ב-apartmentDetailsData במקום apartmentDetails כדי למנוע התנגשות שמות
+            const aptDetails = apartmentDetailsData?.find(apt => apt.apartmentId === application.applicationId);
+
+            if (!aptDetails) {
+                return { name: 'Unknown' };
+            }
+
+            // מציאת הלקוח לפי מזהה הלקוח בפרטי הדירה
+            const customer = customers?.find(cust => cust.customerId === aptDetails.customerId);
+
+            if (!customer) {
+                return { name: 'Unknown' };
+            }
+
+            // החזרת פרטי הלקוח המלאים
+            return {
+                name: `${customer.customerFirstName} ${customer.customerLastName}`,
+                type: 'customer'
+            };
+        }
+
+        // אם השולח הוא שמאי
+        if (isAssessor) {
+            if (thisAssessor.isManager) {
+                // מציאת השמאי לפי מזהה השמאי בפנייה
+                const assessor = assessors?.find(assess => assess.assessorId === application.assessorId);
+                if (!assessor) {
+                    return { name: 'Unknown' };
+                }
+
+                // החזרת פרטי השמאי המלאים
+                return {
+                    name: `${assessor.assessorFirstName} ${assessor.assessorLastName}`,
+                    type: 'assessor'
+                };
+            }
+            return {
+                name: `${thisAssessor.assessorFirstName} ${thisAssessor.assessorLastName}`,
+                type: 'assessor'
+            };
+        }
+
+        // אם לא מדובר בלקוח או בשמאי, החזר את המידע הבסיסי
+        return { name: ` Unknown(${chat.from})` };
     };
 
     // Function to determine if the chat was sent by the current user
@@ -336,12 +409,13 @@ export const LastChats = () => {
                             </Paper>
                         ) : (
                             (filteredChats.length > 0 || sortBy !== 'none' || searchTerm ? filteredChats : myChats).map((chat, index) => {
-                                const isUnread = chat && chat.read === false && chat.from !== userType;
+                                 const isUnread = chat && chat.read === false && chat.from !== userType && !localReadChats[chat.chatId];
                                 const isSent = isSentByCurrentUser(chat);
                                 const applicationDetails = getApplicationDetails(chat.applicationId);
-                                const senderDetails = Array.isArray(users)
-                                    ? users.find(user => user.id === (chat.userId || chat.from)) || { name: 'Unknown', id: 'Unknown' }
-                                    : { name: 'Unknown', id: 'Unknown' };
+                                // const senderDetails = Array.isArray(users)
+                                //     ? users.find(user => user.id === (chat.userId || chat.from)) || { name: 'Unknown', id: 'Unknown' }
+                                //     : { name: 'Unknown', id: 'Unknown' };
+                                const senderDetails = getDetailedUserInfo(chat);
                                 // Updated gradient colors based on requirements
                                 // הקוד המעודכן עם צבע עוד יותר בהיר להודעות שנשלחו
                                 // הקוד המעודכן עם צבע בהיר מאוד מאוד להודעות שנשלחו (דומה להודעות שהתקבלו)
@@ -358,7 +432,6 @@ export const LastChats = () => {
                                 return (
                                     <Fade in={true} timeout={1000 + (index * 200)} key={chat.chatId || index}>
                                         <Paper
-                                            elevation={isUnread ? 3 : 1}
                                             sx={{
                                                 mb: 3,
                                                 borderRadius: 2,
@@ -452,10 +525,10 @@ export const LastChats = () => {
                                                                         whiteSpace: 'nowrap'
                                                                     }
                                                                 }}>
-                                                                    <AssignmentIcon />
+                                                                    {/* <AssignmentIcon />
                                                                     <Typography variant="body2">
                                                                         {applicationDetails.subject}
-                                                                    </Typography>
+                                                                    </Typography> */}
                                                                 </Box>
 
                                                                 <Box sx={{
@@ -478,7 +551,7 @@ export const LastChats = () => {
                                                                     </Typography>
                                                                 </Box>
 
-                                                                {isUnread && (
+                                                                {!thisAssessor.isManager && isUnread && (
                                                                     <Chip
                                                                         label="New"
                                                                         size="small"
@@ -502,10 +575,12 @@ export const LastChats = () => {
                                                     }}>
                                                         <Button
                                                             variant="contained"
+
                                                             onClick={() => {
                                                                 toggleChatExpansion(chat.chatId);
                                                                 if (isUnread && !expandedChats[chat.chatId]) {
                                                                     markAsRead(chat);
+                                                                    
                                                                 }
                                                             }}
                                                             endIcon={expandedChats[chat.chatId] ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}

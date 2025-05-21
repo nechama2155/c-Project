@@ -5,7 +5,7 @@ export const editApplicationThunk = createAsyncThunk(
 
     'editApplicationThunk',
 
-    async ({ details }) => {
+    async (details) => {
         const response = await fetch(`https://localhost:5278/Applications/Update`,{
             method: 'PUT',
             body: JSON.stringify(details),
@@ -15,9 +15,10 @@ export const editApplicationThunk = createAsyncThunk(
         });
        
         if (response.ok) {
-         let data = await response.json();
-         console.log(data);
-         return data;
+        //  let data = await response.json();
+        //  console.log(data);
+        //  return data;
+        return  true;
         }
         else {
             throw new Error('faild to fetch');

@@ -17,6 +17,7 @@ export const INITIALSTATE = {
     thisAssessor:[],
     sucsses: false,
     code:-1,
+    wait: false,
 
 }
 
@@ -62,7 +63,15 @@ export const applicationSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(editApplicationThunk.fulfilled, (state, action) => {
-            state.applications = action.payload;
+            if(action.payload){
+                state.applications.forEach((element,ind)=>{
+                    if(element.applicationId === state.applicationEdit.applicationId){
+                        state.applicationEdit.applicationStatus = state.applicationEdit.applicationStatus++;
+                          state.applications[ind] = state.applicationEdit;
+                    }
+                    });
+            }
+            // state.applications = action.payload;
             state.sucsses = true;
             state.loading = false;
         });
@@ -77,16 +86,26 @@ export const applicationSlice = createSlice({
         });
         builder.addCase(addApplicationThunk.fulfilled, (state, action) => {
            // state.applications = action.payload;
-            var arr=[]
+           var arr=[]
+           if(action.payload === "wait"){
+               state.wait = true;
+           }
+           else if(!action.payload){
+               state.sucsses = false;
+           }
+           else{
             arr=[...arr,action.payload]
             state.thisAssessor =arr;
             state.sucsses = true;
             state.loading = false;
+           }
+         
         });
         // הוספת מקרה שהטנק נכשל 
         builder.addCase(addApplicationThunk.rejected, (state, action) => {
             state.token = -1;
             state.loading = false;
+            state.sucsses = false;
         })
         //get applications by assessor
 builder.addCase(myApplicationsThunk.pending, (state, action) => {

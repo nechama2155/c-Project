@@ -15,11 +15,17 @@ export const addApplicationThunk = createAsyncThunk(
             }
         )
         if (res.ok) {
-            const data = await res.json();
-            if(data==false)
-                return null;
-            return data;
+
+            const text = await res.text();
+            if(text === "wait")
+                return text; 
+            if(text===false)
+                return false;
+            return text;
+            // const data = await res.json();
+            // return data;
     }
-        else throw new Error("Faild to fetch");
+        else return false;
+        // throw new Error("Faild to fetch");
     }
 )

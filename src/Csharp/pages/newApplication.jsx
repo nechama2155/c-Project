@@ -1,182 +1,5 @@
-// import { useEffect, useRef, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addApplicationThunk } from "../redux/slices/add/addApplicationThunk";
-// import Checkbox from '@mui/material/Checkbox';
-// import Button from '@mui/material/Button';
-// import { assessorThunk } from "../redux/slices/get/assessorThunk";
-// import { Navigate, useNavigate } from "react-router-dom";
-// import { TextField } from "@mui/material";
-// import { FlagCircleTwoTone } from "@mui/icons-material";
-// import { editApplicationThunk } from "../redux/slices/edit/editApplicationThunk";
-
-
-// export const NewApplication = () => {
-
-//     const g = useSelector(state=>state.user.users);
-//     const thisassessor = useSelector(state=> state.application.thisAssessor);
-//     const [newCustomer, setNewCustomer] = useState({});
-//     const [directionsArr, setDirectionsArr] = useState({});
-//     const [apartmentData, setApartmentData] = useState({apartmentId:0,customerId:""});
-//     const [applicationData, setApplicationData] = useState({applicationId:0,assessorId:"",applicationDate:new Date().toISOString(),lastApplicationDate:new Date().toISOString(),applicationStatus:11});
-//     const [allData, setAllData] = useState({});
-//     const [flag, setFlag] = useState(false);
-//     const [personalDetails, setPersonalDetails] = useState(false);
-//     const [finish, setFinish] = useState(false);
-//     const [str, setStr] = useState("");
-//     const [loading, setLoading] = useState(false);
-//     const [payd, setPayd] = useState(false);
-//     const [nextt, setnextt] = useState(false);
-//     const [sum, setSum] = useState(0);
-//     const [creditCard, setCreditCard] = useState({num:"",tokef:"",cvv:""});
-//     const [size, setSize] = useState(0);
-//     const [year, setYear] = useState("");
-//     const dispatch = useDispatch();
-//     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-    
-
-
-//     useEffect(() => {
-//       if(str!="")  setApartmentData({ ...apartmentData, directions: str });
-//     }, [str])
-
-//     useEffect(() => {
-//     if(flag) {
-//         dispatch(addApplicationThunk(allData));
-//         setFlag(false);
-//     } 
-//       }, [flag])
-//       useEffect(()=>{
-//         if(thisassessor.length>0)
-//             setFinish(true)
-//       },[thisassessor])
-
-//      useEffect(() => {
-//      cc();
-//     }, [])
-//     const open = () => {
-//         setLoading(true);
-//         let oo = setInterval(() => {
-//             setLoading(false);
-//         }, 5000)
-
-//         clearInterval(oo);
-//     }
-
-//     const checkDirections = () => {
-//         let st="";
-//         if (directionsArr.east)
-//             st+=" east"
-//         if (directionsArr.west)
-//             st+=" west"
-//         if (directionsArr.north)
-//              st+=" north"
-//         if (directionsArr.south)
-//              st+=" south"
-//         setStr(st);
-//     }
-
-
-// const createNewApplication = () => {
-//         checkDirections();
-//         setAllData({...allData,customer:newCustomer,apartment:apartmentData,application:applicationData});
-//         setFlag(true);
-//     }
-
-//     const cc = () => {
-//         setNewCustomer({...newCustomer,customerId: g.userId});
-//     }
-
-
-//     const funToPay = () => {
-//         const currentYear = new Date().getFullYear();
-//         const sizeNum = parseInt(size) || 0; 
-//         const yearNum = parseInt(year) || currentYear;
-        
-//         const yearCost = (currentYear - yearNum) * 200;
-//         const sizeCost = sizeNum * 250;
-        
-//         const summ = yearCost + sizeCost;
-//         setSum(summ);
-//         setnextt(true);
-//       }
-      
-
-
-//         return <div >
-              
-//             {  !finish && <div>
-//                 {!payd&& <>{!nextt && <>
-//                 <TextField id="standard-basic" label="enter your apartment size" variant="standard"  onChange={(e) =>{setSize(e.target.value)}  }/>
-//                 <TextField id="standard-basic" label="enter your apartment Construction year" variant="standard"  onChange={(e) =>{setYear(e.target.value)}  }/>
-//                 <Button  variant="outlined"  onClick={() => {funToPay()}}>next</Button>
-//                 </>
-//                 } 
-//                 {nextt &&<>
-//                     <label >your Amount to be paid: {sum} </label>
-//                     <TextField id="standard-basic" label="number" variant="standard"  onChange={(e) =>{setCreditCard({...creditCard,num:e.target.value})}}/>
-//                     <TextField id="standard-basic" label="tokef" variant="standard"  onChange={(e) =>{setCreditCard({...creditCard,tokef:e.target.value})}}/>
-//                     <TextField id="standard-basic" label="cvv" variant="standard"  onChange={(e) =>{setCreditCard({...creditCard,cvv:e.target.value})}}/>
-//                 <Button  variant="outlined"  onClick={() => {setPayd(true)}}>next</Button>
-//                 </>}</>}
-//                {payd && <> <TextField id="standard-basic" label="first name" variant="standard" onChange={(e) => setNewCustomer({ ...newCustomer, customerFirstName: e.target.value })}/>
-//                 <TextField id="standard-basic" label="last name" variant="standard"  onChange={(e) => setNewCustomer({ ...newCustomer, customerLastName: e.target.value })}/>
-                
-                
-                
-//                 <TextField id="standard-basic" label="adress" variant="standard" onChange={(e) => setNewCustomer({ ...newCustomer, customerAddress: e.target.value })}/>
-//                 <TextField id="standard-basic" label="phone" variant="standard" onChange={(e) => setNewCustomer({ ...newCustomer, customerPhone: e.target.value })}/>
-//                 <TextField id="standard-basic" label="city" variant="standard"  onChange={(e) => setNewCustomer({ ...newCustomer, customerCity: e.target.value })}/>
-//                 <TextField id="standard-basic" label="email" variant="standard" type="email" onChange={(e) => setNewCustomer({ ...newCustomer, customerEmail: e.target.value })}/>
-                
-            
-//                 {/* <Button  variant="outlined"  onClick={() => {setPersonalDetails(true)}}>next</Button> */}
-                
-                
-//                 <div>
-
-//                 <div>please enter your apartment details</div>
-//                 <TextField id="standard-basic" label="city" variant="standard" onChange={(e) => setApartmentData({ ...apartmentData, apartmentCity: e.target.value })}/>
-//                 <TextField id="standard-basic" label="address" variant="standard" onChange={(e) => setApartmentData({ ...apartmentData, apartmentAddress: e.target.value })}/>
-//                 <TextField id="standard-basic" label="size" variant="standard" onChange={(e) => setApartmentData({ ...apartmentData, apartmentSize:parseInt( e.target.value )})}/>
-//                 <TextField id="standard-basic" label="air directions" variant="standard" onChange={(e) => setApartmentData({ ...apartmentData, airDirections: parseInt(e.target.value )})}/>
-//                 <TextField id="standard-basic" label="floor" variant="standard" onChange={(e) => setApartmentData({ ...apartmentData, floor: parseInt(e.target.value) })} />
-//                 <label>elevator</label>
-//                 <Checkbox {...label}  onChange={(e) => setApartmentData({ ...apartmentData, elevator: e.target.checked })} />
-//                 <label>directions</label>
-//                 <div>
-//                     <label>south</label>
-//                     <Checkbox {...label} onChange={(e) => setDirectionsArr({ ...directionsArr, south: e.target.checked })} />
-//                     <label>east</label>
-//                     <Checkbox {...label} onChange={(e) => setDirectionsArr({ ...directionsArr, east: e.target.checked })} />
-//                     <label>north</label>
-//                     <Checkbox {...label} onChange={(e) => setDirectionsArr({ ...directionsArr, north: e.target.checked })} />
-//                     <label>west</label>
-//                     <Checkbox {...label} onChange={(e) => setDirectionsArr({ ...directionsArr, west: e.target.checked })} />
-//                 </div>
-//                 <Button variant="outlined" onClick={() => { createNewApplication() }}>next</Button>
-//             </div>
-                
-//                 </>
-//                 }
-//             </div>
-//             }
-  
-//             {finish &&<>
-//               <div>your application accepted seccessfuly
-// <div>in order to see your accounts you need exit and enter again.</div>
-// </div>
-//               <Button></Button>
-//               </>
-//             }
-//         </div>
-//     }
-
-
-////////////////////////////
-
-
-
-import React, { useEffect, useState } from "react";
+// יש להוסיף את הייבואים הבאים בראש הקובץ (אם אינם קיימים)
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addApplicationThunk } from "../redux/slices/add/addApplicationThunk";
 import { assessorThunk } from "../redux/slices/get/assessorThunk";
@@ -205,7 +28,14 @@ import {
   FormControl,
   Card,
   CardContent,
-  Chip
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Backdrop,
+  Modal
 } from "@mui/material";
 import {
   Home,
@@ -230,7 +60,10 @@ import {
   East,
   West,
   DateRange,
-  CalendarToday
+  CalendarToday,
+  Error,
+  ExitToApp,
+  Refresh
 } from "@mui/icons-material";
 
 export const NewApplication = () => {
@@ -302,6 +135,38 @@ export const NewApplication = () => {
   const [errors, setErrors] = useState({});
   const [allData, setAllData] = useState({});
 
+  // הוספת סטייטים חדשים לטיפול בתהליך הטעינה והודעות
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showResultDialog, setShowResultDialog] = useState(false);
+  
+  // קבלת נתוני הסטייט מהרדיוסר
+  const applicationStatus = useSelector(state => state.application);
+  const isSuccess = useSelector(state => state.application.success);
+  const isWaiting = useSelector(state => state.application.wait);
+  
+  // האזנה לשינויים בסטייט של האפליקציה - גרסה משופרת
+  useEffect(() => {
+    console.log("Application status changed:", { isSuccess, isWaiting, isSubmitting });
+    
+    // בדיקה מפורשת יותר של מצבי התשובה מהשרת
+    if (isSubmitting) {
+      if (isSuccess === true || isSuccess === false || isWaiting === true) {
+        console.log("Response received, closing loading dialog");
+        setIsSubmitting(false);
+        setShowResultDialog(true);
+      }
+    }
+  }, [isSuccess, isWaiting, isSubmitting]);
+  
+  // ניקוי כאשר הקומפוננטה מתפרקת
+  useEffect(() => {
+    return () => {
+      // וידוא שמודל הטעינה נסגר אם הקומפוננטה מתפרקת
+      if (isSubmitting) {
+        setIsSubmitting(false);
+      }
+    };
+  }, [isSubmitting]);
   
   // Initialize customer ID from user data
   useEffect(() => {
@@ -418,33 +283,13 @@ export const NewApplication = () => {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
-//   // Submit application
-//   const submitApplication = () => {
-//     if (validateStep(activeStep)) {
-//       setLoading(true);
-      
-//       // Prepare final data
-//       const finalData = {
-//         customer: newCustomer,
-//         apartment: {
-//           ...apartmentData,
-//           apartmentSize: parseInt(apartmentData.apartmentSize),
-//           floor: parseInt(apartmentData.floor),
-//           airDirections: parseInt(apartmentData.airDirections || 0)
-//         },
-//         application: applicationData
-//       };
-      
-//       setAllData(finalData);
-//       dispatch(addApplicationThunk(finalData));
-//     }
-//   };
-
-const submitApplication = () => {
+  // פונקציה לשליחת הפנייה עם טיפול בטעינה והודעות - גרסה משופרת
+  const submitApplicationWithLoading = () => {
     if (validateStep(activeStep)) {
-      setLoading(true);
+      // הפעלת מצב טעינה
+      setIsSubmitting(true);
       
-      // הכן את הנתונים הסופיים
+      // הכנת הנתונים הסופיים
       const finalData = {
         customer: newCustomer,
         apartment: {
@@ -457,18 +302,222 @@ const submitApplication = () => {
       };
       
       setAllData(finalData);
+      
+      // שליחת הפנייה
       dispatch(addApplicationThunk(finalData));
       
-      // הוסף פסק זמן בטיחותי כדי להבטיח שמצב הטעינה מאופס
+      // הגדרת טיימא웃 בטיחותי קצר יותר
       setTimeout(() => {
-        setLoading(false);
-      }, 10000); // פסק זמן של 10 שניות
+        if (isSubmitting) {
+          console.log("Timeout reached - forcing dialog to show");
+          setIsSubmitting(false);
+          setShowResultDialog(true);
+        }
+      }, 8000); // 8 שניות טיימא웃 במקום 15
     }
   };
   
+// פונקציה לניתוב לדף התחברות - גרסה משופרת
+const navigateToLogin = () => {
+  // ניקוי נתוני המשתמש מהסטור
+  dispatch({ type: 'user/logout' }); // יש להוסיף פעולה כזו ברדיוסר
+  dispatch({ type: 'application/reset' }); // איפוס נתוני האפליקציה
+  
+  // ניתוב לדף הראשי עם החלפת ההיסטוריה
+  navigate("/", { replace: true });
+  
+  // אופציה נוספת - רענון הדף כדי לוודא איפוס מלא
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 100);
+};
+
+  
+  // פונקציה לאתחול הטופס והתחלת פנייה חדשה
+  const startNewApplication = () => {
+    setActiveStep(0);
+    setShowResultDialog(false);
+    // איפוס נתוני הטופס אך שמירה על פרטי המשתמש
+    setApartmentData({
+      apartmentId: 0,
+      customerId: user.userId,
+      apartmentCity: "",
+      apartmentAddress: "",
+      apartmentSize: "",
+      airDirections: "",
+      floor: "",
+      elevator: false,
+      directions: ""
+    });
+    setPaymentData({
+      size: "",
+      year: new Date().getFullYear().toString(),
+      sum: 0,
+      creditCard: {
+        num: "",
+        tokef: "",
+        cvv: ""
+      }
+    });
+    setDirectionsArr({
+      north: false,
+      south: false,
+      east: false,
+      west: false
+    });
+  };
+  
+  // מודל לתצוגת אייקון טעינה
+  const loadingModal = (
+<Modal
+      open={isSubmitting}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Fade in={isSubmitting}>
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            borderRadius: 3,
+            maxWidth: '90%',
+            width: 300,
+            textAlign: 'center',
+            background: 'rgba(255, 255, 255, 0.95)',
+          }}
+        >
+          <CircularProgress size={60} sx={{ mb: 2 }} />
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Processing your request...
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Please wait while we process your request
+          </Typography>
+        </Paper>
+      </Fade>
+    </Modal>
+
+  );
+  
+  // דיאלוג תוצאה - יוצג לאחר השלמת הפנייה
+  const resultDialog = (
+    <Dialog
+      open={showResultDialog}
+      onClose={() => isSuccess ? navigateToLogin() : setShowResultDialog(false)}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        elevation: 5,
+        sx: {
+          borderRadius: 3,
+          p: 1
+        }
+      }}
+    >
+<DialogTitle sx={{ textAlign: 'center', pt: 3 }}>
+        {isSuccess || isWaiting ? (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Check sx={{ color: 'success.main', mr: 1, fontSize: 30 }} />
+            <Typography variant="h5" component="span" fontWeight="bold">
+              Request received successfully
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Error sx={{ color: 'error.main', mr: 1, fontSize: 30 }} />
+            <Typography variant="h5" component="span" fontWeight="bold">
+              Request not received
+            </Typography>
+          </Box>
+        )}
+      </DialogTitle>
+      
+      <DialogContent>
+        <DialogContentText sx={{ textAlign: 'center', mb: 3 }}>
+          {isSuccess || isWaiting ? (
+            <Typography>
+              To login as a customer, please log out and log back into the site.
+            </Typography>
+          ) : (
+            <Typography>
+              An error occurred while processing your request. Please try again or contact support.
+            </Typography>
+          )}
+        </DialogContentText>
+      </DialogContent>
+
+      
+      <DialogActions sx={{ justifyContent: 'center', pb: 3, px: 3, gap: 2 }}>
+        {isSuccess || isWaiting ? (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ExitToApp />}
+            onClick={navigateToLogin}
+            fullWidth
+            sx={{
+              py: 1.5,
+              borderRadius: 2,
+              background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)'
+              },
+            }}
+          >
+            חזרה למסך התחברות
+          </Button>
+        ) : (
+          <>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<Refresh />}
+              onClick={startNewApplication}
+              sx={{
+                py: 1.5,
+                borderRadius: 2,
+                flex: 1
+              }}
+            >
+              פנייה חדשה
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<ExitToApp />}
+              onClick={navigateToLogin}
+              sx={{
+                py: 1.5,
+                borderRadius: 2,
+                flex: 1,
+                background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(90deg, #3a7bd5 0%, #2b5876 90%)'
+                },
+              }}
+            >
+              חזרה להתחברות
+            </Button>
+          </>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+  
   // Handle form reset and navigation
   const handleReset = () => {
-    navigate("/dashboard");
+    navigate("/", { replace: true });
   };
 
   // Render form steps
@@ -1147,6 +1196,9 @@ const submitApplication = () => {
     </Fade>
   );
 
+  // עדכון פונקציית submitApplication הקיימת לשימוש בפונקציה الجديدة
+  const submitApplication = submitApplicationWithLoading;
+
   return (
     <Container maxWidth="md" sx={{ py: { xs: 4, md: 6 } }}>
       <Fade in={true} timeout={600}>
@@ -1263,6 +1315,9 @@ const submitApplication = () => {
                   sx={{ mb: 2 }}
                 />
               </Box>
+              {/* הוספת המודל והדיאלוג */}
+              {loadingModal}
+              {resultDialog}
             </>
           ) : (
             renderSuccess()
@@ -1272,8 +1327,3 @@ const submitApplication = () => {
     </Container>
   );
 };
-
-
-
-
-

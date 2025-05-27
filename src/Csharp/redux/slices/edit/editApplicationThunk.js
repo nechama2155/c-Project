@@ -1,12 +1,11 @@
-
-import { createAsyncThunk } from "@reduxjs/toolkit";
+  import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const editApplicationThunk = createAsyncThunk(
 
     'editApplicationThunk',
 
     async (details) => {
-        const response = await fetch(`https://localhost:5278/Applications/Update`,{
+        const response = await fetch(`https://localhost:7132/Applications/Update`,{
             method: 'PUT',
             body: JSON.stringify(details),
             headers: {
@@ -21,7 +20,7 @@ export const editApplicationThunk = createAsyncThunk(
         return  true;
         }
         else {
-            throw new Error('faild to fetch');
+            throw new Error('Failed to fetch');
         }
     }
 );

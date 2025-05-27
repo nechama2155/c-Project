@@ -139,11 +139,25 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
           setSelected(true);
           setSelectedAs(assessment);
       };
-      const isGoodStatus = (assessment) =>{
-       let a = appliationsDetails.find(x => x.applicationId === assessment.assessmentId && x.applicationStatus === 11);
-       if(a!=null) return true;
-       else return false;
-      }
+      const isGoodStatus = (assessment) => {
+    const currentApplication = appliationsDetails.find(
+        x => x.applicationId === assessment.assessmentId
+    );
+    
+    if (!currentApplication) return false;
+    
+    if (type === "a" && !thisAssessor.isManager) {
+        // שמאי רגיל יכול לעבוד רק על סטטוס 11
+        return currentApplication.applicationStatus === 11;
+    }
+    
+    if (type === "a" && thisAssessor.isManager) {
+        // מנהל יכול לעבוד על סטטוס 12
+        return currentApplication.applicationStatus === 12;
+    }
+    
+    return false;
+};
 
       // הוסף פונקציה חדשה שבודקת אם כל השדות מלאים
       const isAssessmentComplete = (assessment) => {
@@ -166,28 +180,87 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
 
       // Check if user can see action buttons
       const canSeeActions = type === 'a' && !thisAssessor.isManager;
+      const canSee1Actions = type === 'a' && thisAssessor.isManager;
 
       // Check if all data is complete
       const isComplete = isAssessmentComplete();
 
       const setStatus = () => {
           setConfirmDialog(false);
-          const updatedApplications = appliationsDetails.map(a => {
-              if (a.applicationId === selectedAs.applicationId) {
-                  return { ...a, applicationStatus: 5 };
-              }
-              return a;
-          });
 
-          const applicationToUpdate = updatedApplications.find(
-              a => a.applicationId === selectedAs.applicationId
+          const currentApplication = appliationsDetails.find(
+              a => a.applicationId === selectedAs.assessmentId
           );
 
-          if (applicationToUpdate) {
-              dispatch(applicationThunk(applicationToUpdate));
-              setSnackbarMessage('Status has been successfully updated!');
+          if (!currentApplication) {
+              setSnackbarMessage('Application not found!');
               setSnackbarOpen(true);
+              return;
           }
+
+          // קבע את הסטטוס החדש לפי הלוגיקה
+          let newStatus;
+          let statusMessage;
+    
+          if (type === "a" && !thisAssessor.isManager) {
+              // שמאי רגיל
+              if (currentApplication.applicationStatus !== 11) {
+                  setSnackbarMessage('Cannot change status - current status is not 11');
+                  setSnackbarOpen(true);
+                  return;
+              }
+              newStatus = 12;
+              statusMessage = "Assessment completed successfully!";
+          } else if (type === "a" && thisAssessor.isManager) {
+              // מנהל שמאי
+              if (currentApplication.applicationStatus !== 12) {
+                  setSnackbarMessage('Cannot change status - current status is not 12');
+                  setSnackbarOpen(true);
+                  return;
+              }
+              newStatus = 13;
+              statusMessage = "Assessment approved successfully!";
+          } else {
+              setSnackbarMessage('You do not have permission to change status');
+              setSnackbarOpen(true);
+              return;
+          }
+
+          const applicationToUpdate = {
+              applicationId: currentApplication.applicationId,
+              assessorId: currentApplication.assessorId || "string",
+              applicationDate: currentApplication.applicationDate || new Date().toISOString(),
+              lastApplicationDate: new Date().toISOString(),
+              applicationStatus: currentApplication.applicationStatus // שלח את הסטטוס הנוכחי
+          };
+
+          console.log("Updating application:", {
+              from: currentApplication.applicationStatus,
+              to: newStatus,
+              userType: type === "a" && thisAssessor.isManager ? "Manager" : "Regular Assessor"
+          });
+
+          // שלח לשרת ועדכן את ה-store המקומי
+          dispatch(editApplicationThunk(applicationToUpdate))
+              .then(() => {
+                  // עדכן גם את ה-store המקומי של applications
+                  dispatch(editApplication({
+                      ...currentApplication,
+                      applicationStatus: newStatus,
+                      lastApplicationDate: new Date().toISOString()
+                  }));
+                  
+                  setSnackbarMessage(statusMessage);
+                  setSnackbarOpen(true);
+                  
+                  // בטל את הבחירה כדי שהכפתורים ייעלמו
+                  setSelected(false);
+                  setSelectedAs({});
+              })
+              .catch((error) => {
+                  setSnackbarMessage(`Failed to update status: ${error.message}`);
+                  setSnackbarOpen(true);
+              });
       };
       return (
           <Box sx={{ p: { xs: 1, sm: 2, md: 4 }, position: 'relative' }} ref={topRef}>
@@ -636,18 +709,7 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                                                       color: '#495057',
                                                       whiteSpace: 'nowrap'
                                                   }}>
-                                                      <Chip
-                                                          label={assessment.legalState || 'Unknown'}
-                                                          size="small"
-                                                          sx={{
-                                                              bgcolor: assessment.legalState?.toLowerCase().includes('legal') ? '#e8f5e9' :
-                                                                  assessment.legalState?.toLowerCase().includes('pending') ? '#fff8e1' : '#ffebee',
-                                                              color: assessment.legalState?.toLowerCase().includes('legal') ? '#2e7d32' :
-                                                                  assessment.legalState?.toLowerCase().includes('pending') ? '#f57f17' : '#c62828',
-                                                              fontWeight: 500,
-                                                              fontSize: '0.7rem'
-                                                          }}
-                                                      />
+                                                      {assessment.legalState || 'N/A'}
                                                   </td>
                                                   {!isMdScreen && (
                                                       <>
@@ -659,10 +721,19 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                                                               textAlign: 'center',
                                                               whiteSpace: 'nowrap'
                                                           }}>
-                                                              {assessment.buildingPermit ?
-                                                                  <CheckIcon sx={{ color: '#2e7d32' }} /> :
-                                                                  <CloseIcon sx={{ color: '#c62828' }} />
-                                                              }
+                                                              {assessment.buildingPermit ? (
+                                                                  <CheckIcon sx={{ 
+                                                                      color: '#4caf50', // ירוק
+                                                                      fontSize: '20px',
+                                                                      verticalAlign: 'middle'
+                                                                  }} />
+                                                              ) : (
+                                                                  <CloseIcon sx={{ 
+                                                                      color: '#f44336', // אדום
+                                                                      fontSize: '20px',
+                                                                      verticalAlign: 'middle'
+                                                                  }} />
+                                                              )}
                                                           </td>
                                                           <td style={{
                                                               padding: '12px 16px',
@@ -672,10 +743,19 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                                                               textAlign: 'center',
                                                               whiteSpace: 'nowrap'
                                                           }}>
-                                                              {assessment.irregularitiesBuilding ?
-                                                                  <CheckIcon sx={{ color: '#c62828' }} /> :
-                                                                  <CloseIcon sx={{ color: '#2e7d32' }} />
-                                                              }
+                                                              {assessment.irregularitiesBuilding ? (
+                                                                  <CheckIcon sx={{ 
+                                                                      color: '#4caf50', // ירוק
+                                                                      fontSize: '20px',
+                                                                      verticalAlign: 'middle'
+                                                                  }} />
+                                                              ) : (
+                                                                  <CloseIcon sx={{ 
+                                                                      color: '#f44336', // אדום
+                                                                      fontSize: '20px',
+                                                                      verticalAlign: 'middle'
+                                                                  }} />
+                                                              )}
                                                           </td>
                                                       </>
                                                   )}
@@ -782,9 +862,9 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                           </Button>
 
                           {/* כפתור עריכה מוצג רק כאשר יש שורה נבחרת ויש הרשאות מתאימות */}
-                          {canSeeActions && (
+                          {(canSee1Actions || canSeeActions )&& (
                               <>
-                                  <Button
+                                  {!canSee1Actions && <Button
                                       variant="outlined"
                                       startIcon={<EditIcon />}
                                       onClick={() => {
@@ -804,14 +884,20 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                                       }}
                                   >
                                       Edit Assessment
-                                  </Button>
+                                  </Button>}
 
                                   <Button 
                                       variant="text" 
-                                      onClick={() => {dispatch(editApplication(selectedAs)); dispatch(editApplicationThunk(selectedAs)) }}
-                                      disabled={!isAssessmentComplete(selectedAs) || !isGoodStatus(selectedAs) }
+                                      onClick={() => setConfirmDialog(true)}
+                                      disabled={!isAssessmentComplete(selectedAs) || !isGoodStatus(selectedAs)}
+                                      sx={{
+                                          color: (isGoodStatus(selectedAs) && isAssessmentComplete(selectedAs)) ? '#4caf50' : '#9e9e9e',
+                                          '&:hover': {
+                                              backgroundColor: (isGoodStatus(selectedAs) && isAssessmentComplete(selectedAs)) ? 'rgba(76, 175, 80, 0.1)' : 'transparent'
+                                          }
+                                      }}
                                   >
-                                      set status
+                                      {type === "a" && !thisAssessor.isManager ? "Complete Assessment" : "Approve Assessment"}
                                   </Button>
                               </>
                           )}
@@ -827,12 +913,17 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                   aria-describedby="alert-dialog-description"
               >
                   <DialogTitle id="alert-dialog-title">
-                      {"Mark Assessment as Complete?"}
+                      {type === "a" && !thisAssessor.isManager 
+                          ? "Complete Assessment?" 
+                          : "Approve Assessment?"
+                      }
                   </DialogTitle>
                   <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                          Are you sure you want to mark this assessment as complete?
-                          This action will update the application status and cannot be undone.
+                          {type === "a" && !thisAssessor.isManager 
+                              ? "Are you sure you want to mark this assessment as complete? This will change the status from Assessor to Manager."
+                              : "Are you sure you want to approve this assessment? This will change the status from Manager to Final."
+                          }
                       </DialogContentText>
                   </DialogContent>
                   <DialogActions>
@@ -840,7 +931,7 @@ import { editApplication } from "../../redux/slices/applicationsSlice";
                           Cancel
                       </Button>
                       <Button onClick={setStatus} color="primary" autoFocus>
-                          Confirm
+                          {type === "a" && !thisAssessor.isManager ? "Complete" : "Approve"}
                       </Button>
                   </DialogActions>
               </Dialog>

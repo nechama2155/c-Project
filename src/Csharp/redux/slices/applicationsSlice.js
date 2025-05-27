@@ -63,21 +63,33 @@ export const applicationSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(editApplicationThunk.fulfilled, (state, action) => {
-            if(action.payload){
-                state.applications.forEach((element,ind)=>{
-                    if(element.applicationId === state.applicationEdit.applicationId){
-                        state.applicationEdit.applicationStatus = state.applicationEdit.applicationStatus++;
-                          state.applications[ind] = state.applicationEdit;
-                    }
-                    });
+            // מצא את ה-application שעודכן
+            const updatedApplicationIndex = state.applications.findIndex(
+                app => app.applicationId === action.meta.arg.applicationId
+            );
+            
+            if (updatedApplicationIndex !== -1) {
+                const currentStatus = state.applications[updatedApplicationIndex].applicationStatus;
+                
+                // עדכן את הסטטוס בהתאם לסטטוס הנוכחי
+                if (currentStatus === 11) {
+                    // שמאי רגיל: 11 -> 12
+                    state.applications[updatedApplicationIndex].applicationStatus = 12;
+                } else if (currentStatus === 12) {
+                    // מנהל שמאי: 12 -> 13
+                    state.applications[updatedApplicationIndex].applicationStatus = 13;
+                }
+                
+                // עדכן גם את תאריך העדכון האחרון
+                state.applications[updatedApplicationIndex].lastApplicationDate = new Date().toISOString();
             }
-            // state.applications = action.payload;
-            state.sucsses = true;
+            
             state.loading = false;
+            state.success = true;
         });
         builder.addCase(editApplicationThunk.rejected, (state, action) => {
-            state.token = -1;
             state.loading = false;
+            state.error = action.error.message;
         })
 
         //add

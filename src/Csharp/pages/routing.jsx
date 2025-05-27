@@ -18,7 +18,7 @@ import { LastChats } from "./lastChats"
 import { NewChat } from "./newChat"
 import { EditAssessment } from "./Assessment/editAssessment"
 import { FullApplications } from "./fullApplications"
-import { Folder } from "@mui/icons-material"
+import { Archive, Folder } from "@mui/icons-material"
 import Folders from "./folders"
 import FoldersDemo from "./folderDemo"
 import FilePreview from "./file"
@@ -56,6 +56,7 @@ export const Routing = () => {
                 <Route path={'folders'} element={<Folders />} />
                 <Route path={'folderDemo'} element={<FoldersDemo/>} />
                 <Route path={'filePreview'} element={<FilePreview/>} />
+                <Route path={'archive'} element={<Archive/>} /> 
 
 
             </Route>
